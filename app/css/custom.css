@@ -1,0 +1,70 @@
+/*
+ * 부트스트랩 스타일 변경 #4591 ~ 4613
+ */
+.navbar-inverse {
+  background-color: #007BC1;
+  border-color: #00588A;
+}
+
+.navbar-inverse .navbar-brand {
+  color: #fff;
+}
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus {
+  color: #fff;
+  background-color: transparent;
+}
+.navbar-inverse .navbar-text {
+  color: #fff;
+}
+.navbar-inverse .navbar-nav > li > a {
+  color: #fff;
+}
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+  color: #fff;
+  background-color: transparent;
+}
+
+
+#navbar-left {
+    background-color: #f5f5f5;
+    border-right: 1px solid #eeeeee;
+}
+
+.modal-location .modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+th.sort {
+    cursor: pointer;
+}
+
+.ellipsis-base {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.ellipsis-name {
+    max-width: 60px;
+}
+
+.ellipsis-name-l {
+    max-width: 140px;
+}
+
+.ellipsis-title {
+    max-width: 450px;
+}
+
+.ellipsis-title-m {
+    max-width: 280px;
+}
+
+ul.reply {
+    padding-left: 1em;
+    list-style: none;
+    border-left: 1px solid #555;
+}

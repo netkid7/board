@@ -1,0 +1,148 @@
+<?php
+if (empty($cssLink)) {
+    $cssLink = array();
+}
+if (empty($scriptHeader)) {
+    $scriptHeader = array();
+}
+if (empty($scriptFooter)) {
+    $scriptFooter = array();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta content="ie=edge" http-equiv="x-ua-compatible" />
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>경산시 CCTV 현황파악 시스템</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/app/css/custom.css" />
+<?php
+foreach ($cssLink as $val) { ?>
+
+    <link rel="stylesheet" href="<?=$val?>" /><?php
+}
+?>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/js/jquery/jquery-1.12.4.min.js"></script>
+<?php
+foreach ($scriptHeader as $val) { ?>
+
+    <script src="<?=$val?>"></script><?php
+}
+?>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+    .todo {
+        opacity: 0.4;
+    }
+    </style>
+</head>
+
+<body style="padding-top: 60px;">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"><!-- <img alt="Project name" src="/images/logo.png" /> -->경산시 CCTV 현황</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <!--
+                    <li><a href="#">Dashboard</a></li>
+                    <li><a href="#">Settings</a></li>
+                    <li><a href="#">Profile</a></li>
+                    --><?php
+                if (empty($_SESSION['_name'])) { ?>
+
+                    <li><a href="/login_ctrl.php?mode=login" title="로그인"><span> 로그인</span> <i class="fa fa-sign-in" aria-hidden="true"></i></a></li><?php
+                } else { ?>
+
+                    <li><a href="/login_ctrl.php?mode=info"><?=$_SESSION['_name']?></a></li>
+                    <li><a href="/login_ctrl.php?mode=logout" title="로그아웃"><span> 로그아웃</span> <i class="fa fa-sign-out" aria-hidden="true"></i></a></li><?php
+                } ?>
+
+                </ul>
+                <!--
+                <form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>
+                -->
+            </div>
+        </div>  
+    </nav>
+
+<?php
+$menu1 = array(
+    array('url'=>'/cctv/', 'title'=>'CCTV', 'minAuth'=>'0', 'parent'=>0),
+    array('url'=>'/location/', 'title'=>'위치정보관리', 'minAuth'=>'0', 'parent'=>0),
+    array('url'=>'/code/', 'title'=>'코드관리', 'minAuth'=>'9', 'parent'=>0),
+    array('url'=>'/camera/', 'title'=>'카메라모델', 'minAuth'=>'9', 'parent'=>0)
+);
+$menu2 = array(
+    array('url'=>'/cctv/index.php?enter=batch', 'title'=>'CCTV 엑셀/CSV', 'minAuth'=>'9', 'parent'=>0),
+    array('url'=>'/location/index.php?enter=batch', 'title'=>'위치정보 엑셀/CSV', 'minAuth'=>'9', 'parent'=>0),
+    array('url'=>'/board/', 'title'=>'작업관리', 'minAuth'=>'0', 'parent'=>0),
+    array('url'=>'/member/', 'title'=>'사용자', 'minAuth'=>'9', 'parent'=>0)
+);
+?>
+
+    <div class="container">
+        <div class="row">
+            <div id="navbar-left" class="col-sm-3 col-md-2">
+                <ul class="nav nav-pills nav-stacked"><?php
+                foreach ($menu1 as $val) {
+                    if ($_SESSION['_level'] >= $val['minAuth']) { ?>
+
+                    <li><a href="<?=$val['url']?>"><?=$val['title']?></a></li><?php
+                    }
+                } ?>
+
+                </ul>
+                <hr />
+                <ul class="nav nav-pills nav-stacked"><?php
+                foreach ($menu2 as $val) {
+                    if ($_SESSION['_level'] >= $val['minAuth']) { ?>
+
+                    <li><a href="<?=$val['url']?>"><?=$val['title']?></a></li><?php
+                    }
+                } ?>
+                
+                    <li class="todo"><a href="#">More navigation</a></li>
+                </ul>
+            </div>
+
+            <div class="col-sm-9 col-md-10">
+<?php
+include_once $content_page;?>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="/js/bootstrap/bootstrap.min.js"></script>
+<?php
+foreach ($scriptFooter as $val) { ?>
+
+    <script src="<?=$val?>"></script><?php
+}
+?>
+
+</body>
+</html>
