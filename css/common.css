@@ -1,0 +1,433 @@
+@import url("http://fonts.googleapis.com/css?family=Maven+Pro:400,900,700,500");
+@import url("http://fonts.googleapis.com/earlyaccess/nanumgothic.css");
+
+body
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-family: "Nanum Gothic", "Noto Sans KR";
+	font-size: 12px;
+	background-color: #ECF2F6;
+}
+
+div,
+p,
+dl,
+dl dt,
+dl dd
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+ul,
+ul li
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+a
+{
+	text-decoration: none;
+}
+
+form,
+fieldset,
+legend
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+/* 로그인 */
+body#wrapper
+{
+	width: 100%;
+	height: 100%;
+	background: url(/images/bg_login.jpg) center top no-repeat;
+	background-attachment: cover;
+	position: absolute;
+}
+
+body#wrapper div#login-logo
+{
+	position: absolute;
+	left: 40px;
+	top: 40px;
+}
+
+body#wrapper div#copyright
+{
+	position: absolute;
+	right: 40px;
+	bottom: 40px;
+	color: #FFF;
+}
+
+div#login
+{
+	width: 339px;
+	margin: 0 auto;
+	margin-top: 250px;
+}
+
+div#login img
+{
+	display: block;
+	margin-bottom: 20px;
+}
+
+div#login div.input
+{
+	margin-bottom: 5px;
+	padding: 10px 10px;
+	border: 1px solid #8695A4;
+	background-color: #F7F9FA;
+	border-radius: 5px;
+}
+
+div#login input.input
+{
+	width: 100%;
+	padding: 5px 0;
+	border: none;
+	background-color: #F7F9FA;
+	font-size: 12px;
+}
+
+div#login div.submit
+{
+	padding: 10px 10px;
+	border: 1px solid #005A8D;
+	background-color: #007BC1;
+	border-radius: 5px;
+}
+
+div#login input.submit
+{
+	width: 100%;
+	padding: 10px 5px;
+	border: none;
+	background-color: #007BC1;
+	font-size: 12px;
+	color: #FFF;
+}
+
+div#login a
+{
+	display: inline-block;
+	background-color: #F7F9FA;
+	border-radius: 5px;
+	margin-top: 5px;
+	padding: 5px 10px;
+	float: right;
+}
+
+/* 헤더 */
+div#header
+{
+	border-bottom: 1px solid #00588A;
+	background-color: #007BC1;
+}
+
+div#header div#header-inner
+{
+	width: 90%;
+	margin: 0 auto;
+	overflow: hidden;
+}
+
+div#header div#header-inner div#header-logo
+{
+	float: left;
+	padding: 5px 0;
+}
+
+div#header div#header-inner div#logout
+{
+	float: right;
+	padding-top: 20px;
+}
+
+div#header div#header-inner div#logout a
+{
+	display: block;
+	height: 19px;
+	padding-right: 25px;
+	background: url(/images/ico_logout.png) right center no-repeat;
+}
+
+div#header div#header-inner div#logout a span
+{
+	color: #FFF;
+}
+
+div#container
+{
+	width: 90%;
+	margin: 0 auto;
+	margin-top: 30px;
+	margin-bottom: 30px;
+	border: 1px solid #D2DAE2;
+	background-color: #FFF;
+	position: relative;
+}
+
+div#container div#sidemenu
+{
+	width: 20%;
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+
+div#container div#sidemenu ul
+{
+}
+
+div#container div#sidemenu ul li
+{
+	border-bottom: 1px solid #EDF0F1;
+}
+
+div#container div#sidemenu ul li a
+{
+	display: inline-block;
+	padding: 15px 20px;
+	color: #4E515E;
+}
+
+div#container div#sidemenu ul li a.current,
+div#container div#sidemenu ul li a:hover
+{
+	padding: 15px 20px 15px 17px;
+	border-left: 3px solid #007BC1;
+	color: #F26522;
+	font-weight: bold;
+}
+
+div#container div#contents
+{
+	padding: 0 0 0 20%;
+}
+
+div#container div#contents div#contents-wrap
+{
+	border-left: 1px solid #EDF0F1;
+	padding: 20px 40px;
+}
+
+div#container div#contents div#contents-wrap div#contents-title
+{
+}
+
+div#container div#contents div#contents-wrap div#contents-title span
+{
+	font-size: 20px;
+	color: #1D3043;
+	font-weight: bold;
+}
+
+div#container div#contents div#contents-wrap div#contents-inner
+{
+	padding-top: 20px;
+}
+
+div.board_search
+{
+	padding-bottom: 5px;
+	text-align: right;
+}
+
+div.board_search select
+{
+	padding: 3px 5px;
+	border: 1px solid #BABFC8;
+	font-size: 12px;
+}
+
+div.board_search input.input
+{
+	padding: 5px 5px;
+	border: 1px solid #BABFC8;
+	font-size: 12px;
+}
+
+div.board_search input.image
+{
+	vertical-align: middle;
+}
+
+table.common
+{
+	width: 100%;
+	border-collapse: collapse;
+	border-top: 1px solid #616F87;
+}
+
+table.common th
+{
+	padding: 15px 0;
+	border-top: 1px solid #616F87;
+	border: 1px solid #EDF0F1;
+	background-color: #6F7D95;
+	background-color: #F9F9F9;
+	text-align: center;
+	font-size: 13px;
+	color: #616F87;
+	font-weight: bold;
+}
+
+table.common td
+{
+	padding: 15px 10px;
+	border: 1px solid #EDF0F1;
+	text-align: center;
+	font-size: 12px;
+	color: #777;
+}
+
+table.common td a
+{
+	font-size: 12px;
+	color: #777;
+}
+
+table.common td.align_left
+{
+	text-align: left;
+}
+
+table.common td.item
+{
+	padding: 15px 20px;
+	border: 1px solid #EDF0F1;
+	background-color: #F9F9F9;
+	text-align: left;
+	font-size: 13px;
+	color: #616F87;
+	font-weight: bold;
+}
+
+table.common td.title
+{
+	padding: 15px 10px;
+	border-bottom: 1px solid #616F87;
+	background-color: #6F7D95;
+	text-align: left;
+	color: #FFF;
+}
+
+table.common td span
+{
+	display: block;
+	padding-left: 20px;
+}
+
+table.common td span.required
+{
+	background: url(/images/ico_check.png) left center no-repeat;
+}
+
+table.common td input.input
+{
+	width: 95%;
+	padding: 10px 10px;
+	border: 1px solid #D2DAE2;
+}
+
+table.common td textarea
+{
+	width: 95%;
+	height: 500px;
+	padding: 10px 10px;
+	border: 1px solid #D2DAE2;
+}
+
+table.common td input.input:focus,
+table.common td textarea:focus
+{
+	border: 1px solid #354052;
+}
+
+table.common td input.file,
+table.common td a.file
+{
+	display: inline-block;
+	padding: 10px 10px;
+	border: 1px solid #D2DAE2;
+	background-color: #F9F9F9;
+	border-radius: 20px;
+}
+
+div.board_paging
+{
+	padding-top: 20px;
+	text-align: center;
+}
+
+div.board_paging strong
+{
+	display: inline-block;
+	padding: 10px 15px;
+	border: 1px solid #293241;
+	color: #54688B;
+	font-weight: bold;
+}
+
+div.board_paging span
+{
+	display: inline-block;
+	padding: 10px 15px;
+	border: 1px solid #EDF0F1;
+	color: #887E7E;
+}
+
+div.board_command
+{
+	padding-top: 20px;
+	text-align: right;
+}
+
+div.board_command a
+{
+	display: inline-block;
+	padding: 10px 20px;
+	border: 1px solid #D2DAE2;
+	background-color: #FFF;
+	border-radius: 2px;
+	color: #596679;
+}
+
+div.board_command a.active,
+div.board_command input.active
+{
+	display: inline-block;
+	padding: 10px 20px;
+	border: 1px solid #293241;
+	background-color: #354052;
+	border-radius: 2px;
+	color: #FFF;
+}
+
+div#map-menu
+{
+	padding: 10px 20px;
+}
+
+div#map-menu a
+{
+	display: inline-block;
+	margin-right: 20px;
+	padding: 10px 20px;
+	border: 1px solid #293241;
+	background-color: #354052;
+	border-radius: 5px;
+	color: #FFF;
+}
