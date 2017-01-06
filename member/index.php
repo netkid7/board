@@ -14,6 +14,15 @@ if (!empty($_POST['action'])) {
         case 'del':
             $member->remove();
             break;
+        case 'login':
+            $member->logIn();
+            break;
+        case 'reg':
+            $member->memberWrite();
+            break;
+        case 'correct':
+            $member->memberModify();
+            break;
         default:
             $member->index();
     }
@@ -28,10 +37,36 @@ if (!empty($_POST['action'])) {
         case 'm':
             $member->modify($_GET['idx']);
             break;
+        case 'login':
+            $member->logIn();
+            break;
+        case 'logout':
+            $member->logOut();
+            break;
+        case 'reg':
+            $member->memberWrite();
+            break;
+        case 'info':
+            $member->memberView();
+            break;
+        case 'correct':
+            $member->memberModify();
+            break;
+        case 'leave':
+            $member->memberLeave();
+            break;
         default:
-            $member->index();
+            if (isAdmin()) {
+                $member->index();
+            } else {
+                $member->memberView();
+            }
     }
 } else {
-    $member->index();
+    if (isAdmin()) {
+        $member->index();
+    } else {
+        $member->logIn();
+    }
 }
 
