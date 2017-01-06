@@ -11,3 +11,8 @@ foreach ($rows as $key => $val) {
             <?=$strAttach?>
         </span><?php
     }
+    /*
+     * submit 시 추가 내용있으면 삭제 체크
+     * 삭제 상태에 따라 file 사용 on/off
+     */
+    ?>

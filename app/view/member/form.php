@@ -5,8 +5,10 @@ if ($m_state) {
 } else {
     $checkState['y'] = 'checked';
 }
+
+$m_level = ($hdnAction == 'add')? '1': $m_level;
 ?>
-                <h3>사용자 관리</h3>
+                <h3>사용자 수정</h3>
 
                 <div class="row">
                     <div class="col-md-12">
@@ -18,24 +20,31 @@ if ($m_state) {
                             <input type="hidden" name="url" id="url" value="<?=getQuery('enter, idx')?>" />
                             <input type="hidden" name="id_duple" id="id_duple" value="<?=$hdnDupl?>" />
 
-                            <div class="form-group">
-                                <label class="col-md-2 control-label">아이디</label><?php
-                            if ($hdnAction == 'add') { ?>
+                        <?php
+                        if ($hdnAction == 'add') { ?>
 
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">아이디</label>
                                 <div class="col-md-3">
                                     <input type="text" name="id" id="id" class="form-control" value="<?=$m_id?>" required maxlength="50" />
                                 </div>
                                 <div class="col-md-1">
                                     <button type="button" class="btn btn-default" id="check_id" data-target="#idModal">중복체크</button>
-                                </div><?php
-                            } else { ?>
+                                </div>
+                                <div class="col-md-6 col-md-offset-2">
+                                    <span class="help-block">알파벳으로 시작, 알파벳과 숫자 조합 6~20글자</span>
+                                </div>
+                            </div><?php
+                        } else { ?>
 
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">아이디</label>
                                 <div class="col-md-3">
                                     <label class="control-label"><?=$m_id?></label>
-                                </div><?php
+                                </div>
+                            </div><?php
                             } ?>
 
-                            </div>
                             <div class="form-group">
                                 <label class="col-md-2 control-label">비밀번호</label>
                                 <div class="col-md-4">
@@ -50,7 +59,7 @@ if ($m_state) {
                             </div>
                             <div class="form-group">
                                 <label class="col-md-2 control-label">이름</label>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <input type="text" name="name" id="name" class="form-control" value="<?=$m_name?>" required maxlength="50" />
                                 </div>
                             </div>
@@ -66,7 +75,7 @@ if ($m_state) {
 
                                     </select>
                                 </div>
-                                <label class="col-md-1 col-md-offset-2 control-label">상태</label>
+                                <label class="col-md-1 control-label">상태</label>
                                 <div class="col-md-3">
                                     <div class="radio">
                                         <label>
@@ -79,30 +88,26 @@ if ($m_state) {
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-2 control-label">소속</label>
-                                <div class="col-md-4">
-                                    <input type="text" name="dept" id="dept" class="form-control" value="<?=$m_dept?>" maxlength="50" />
-                                </div>
-                                <label class="col-md-1 control-label">연락처</label>
-                                <div class="col-md-3">
-                                    <input type="text" name="phone" id="phone" class="form-control" value="<?=$m_phone?>" maxlength="50" />
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label class="col-md-2 control-label">이메일</label>
                                 <div class="col-md-4">
                                     <input type="text" name="email" id="email" class="form-control" value="<?=$m_email?>" maxlength="50" />
                                 </div>
                             </div>
                             <div class="form-group">
+                                <label class="col-md-2 control-label">연락처</label>
+                                <div class="col-md-4">
+                                    <input type="text" name="phone" id="phone" class="form-control" value="<?=$m_phone?>" maxlength="50" />
+                                </div>
+                            </div>
+                            <div class="form-group">
                                 <label class="col-md-2 control-label">메모</label>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <input type="text" name="memo" id="memo" class="form-control" value="<?=$m_memo?>" maxlength="100" />
                                 </div>
                             </div>
                             <hr />
                             <div class="form-group">
-                                <div class="col-md-3 col-md-offset-4">
+                                <div class="col-md-3 col-md-offset-2">
                                     <button type="submit" class="btn btn-info"><?=$btnAction?></button>
                                     <a href="javascript:history.back();" class="btn btn-default">취소</a>
                                 </div>

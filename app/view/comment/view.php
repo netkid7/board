@@ -10,6 +10,7 @@ foreach ($rows as $key => $val) {
     } else {
         $attachFile[] = '<a href="/app/download.php?idx='.$val['a_idx'].'">'.$val['a_file_name'].'</a>';
     }
+    // echo "{$val['a_idx']} | {$val['a_parent']} | {$val['a_parent_idx']} | {$val['a_file_name']} | {$val['a_save_name']} <br />";
 }
 ?>
 

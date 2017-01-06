@@ -15,7 +15,7 @@ if (empty($scriptFooter)) {
 <meta content="ie=edge" http-equiv="x-ua-compatible" />
     <meta content="text/html; charset=utf-8" http-equiv="content-type" />
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>경산시 CCTV 현황파악 시스템</title>
+    <title>Board 시스템</title>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
@@ -59,7 +59,7 @@ foreach ($scriptHeader as $val) { ?>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#"><!-- <img alt="Project name" src="/images/logo.png" /> -->경산시 CCTV 현황</a>
+                <a class="navbar-brand" href="#"><!-- <img alt="Project name" src="/images/logo.png" /> -->Board</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav navbar-right">
@@ -70,11 +70,11 @@ foreach ($scriptHeader as $val) { ?>
                     --><?php
                 if (empty($_SESSION['_name'])) { ?>
 
-                    <li><a href="/login_ctrl.php?mode=login" title="로그인"><span> 로그인</span> <i class="fa fa-sign-in" aria-hidden="true"></i></a></li><?php
+                    <li><a href="/member/" title="로그인"><span> 로그인</span> <i class="fa fa-sign-in" aria-hidden="true"></i></a></li><?php
                 } else { ?>
 
-                    <li><a href="/login_ctrl.php?mode=info"><?=$_SESSION['_name']?></a></li>
-                    <li><a href="/login_ctrl.php?mode=logout" title="로그아웃"><span> 로그아웃</span> <i class="fa fa-sign-out" aria-hidden="true"></i></a></li><?php
+                    <li><a href="/member/index.php?enter=info"><?=$_SESSION['_name']?></a></li>
+                    <li><a href="/member/index.php?enter=logout" title="로그아웃"><span> 로그아웃</span> <i class="fa fa-sign-out" aria-hidden="true"></i></a></li><?php
                 } ?>
 
                 </ul>
@@ -89,17 +89,23 @@ foreach ($scriptHeader as $val) { ?>
 
 <?php
 $menu1 = array(
-    array('url'=>'/cctv/', 'title'=>'CCTV', 'minAuth'=>'0', 'parent'=>0),
-    array('url'=>'/location/', 'title'=>'위치정보관리', 'minAuth'=>'0', 'parent'=>0),
-    array('url'=>'/code/', 'title'=>'코드관리', 'minAuth'=>'9', 'parent'=>0),
-    array('url'=>'/camera/', 'title'=>'카메라모델', 'minAuth'=>'9', 'parent'=>0)
+    array('url'=>'/notice/', 'title'=>'공지사항', 'minAuth'=>'1', 'parent'=>0),
+    array('url'=>'/gallery/', 'title'=>'갤러리', 'minAuth'=>'1', 'parent'=>0),
+    array('url'=>'/pdf/', 'title'=>'자료실', 'minAuth'=>'1', 'parent'=>0),
+    array('url'=>'/qna/', 'title'=>'Q&A', 'minAuth'=>'1', 'parent'=>0)
 );
 $menu2 = array(
-    array('url'=>'/cctv/index.php?enter=batch', 'title'=>'CCTV 엑셀/CSV', 'minAuth'=>'9', 'parent'=>0),
-    array('url'=>'/location/index.php?enter=batch', 'title'=>'위치정보 엑셀/CSV', 'minAuth'=>'9', 'parent'=>0),
-    array('url'=>'/board/', 'title'=>'작업관리', 'minAuth'=>'0', 'parent'=>0),
+    // array('url'=>'/cctv/index.php?enter=batch', 'title'=>'CCTV 엑셀/CSV', 'minAuth'=>'9', 'parent'=>0),
+    // array('url'=>'/location/index.php?enter=batch', 'title'=>'위치정보 엑셀/CSV', 'minAuth'=>'9', 'parent'=>0),
+    array('url'=>'/board/', 'title'=>'게시판', 'minAuth'=>'1', 'parent'=>0),
     array('url'=>'/member/', 'title'=>'사용자', 'minAuth'=>'9', 'parent'=>0)
 );
+
+if (empty($_SESSION['_level'])) {
+    $menuLevel = 1;
+} else {
+    $menuLevel = $_SESSION['_level'];
+}
 ?>
 
     <div class="container">
@@ -107,7 +113,7 @@ $menu2 = array(
             <div id="navbar-left" class="col-sm-3 col-md-2">
                 <ul class="nav nav-pills nav-stacked"><?php
                 foreach ($menu1 as $val) {
-                    if ($_SESSION['_level'] >= $val['minAuth']) { ?>
+                    if ($menuLevel >= $val['minAuth']) { ?>
 
                     <li><a href="<?=$val['url']?>"><?=$val['title']?></a></li><?php
                     }
@@ -117,7 +123,7 @@ $menu2 = array(
                 <hr />
                 <ul class="nav nav-pills nav-stacked"><?php
                 foreach ($menu2 as $val) {
-                    if ($_SESSION['_level'] >= $val['minAuth']) { ?>
+                    if ($menuLevel >= $val['minAuth']) { ?>
 
                     <li><a href="<?=$val['url']?>"><?=$val['title']?></a></li><?php
                     }

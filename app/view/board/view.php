@@ -1,9 +1,9 @@
 
-                <h3>작업 관리</h3>
+                <h3>게시판</h3>
 
                 <div class="row">
-                    <div class="col-md-12">
-                        <h4>작업</h4>
+                    <div class="col-md-10">
+                        <h4>게시판</h4>
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <tbody>
@@ -27,7 +27,7 @@
                                     </tr>
                                     <tr>
                                         <th>제목</th>
-                                        <td colspan="3"><?=$b_title?> [<?=$b_task?>]</td>
+                                        <td colspan="3"><?=$b_title?></td>
                                     </tr>
                                     <tr>
                                         <th>내용</th>

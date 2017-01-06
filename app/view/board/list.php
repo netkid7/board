@@ -7,11 +7,11 @@ if (empty($get_s)) {
 }
 ?>
 
-                <h3>작업 관리</h3>
+                <h3>게시판</h3>
 
                 <div class="row">
                     <div class="col-md-12">
-                        <h4>작업</h4>
+                        <h4>게시판</h4>
                         <div class="row">
                             <form name="frmSearch" id="frmSearch" method="GET" class="form-horizontal" action="<?=$_SERVER['PHP_SELF']?>">
                                 <input type="hidden" name="bat" id="bat" value="" />
@@ -52,33 +52,34 @@ if (empty($get_s)) {
                                         <th class="col-md-1">작성</th>
                                         <th class="col-md-2">작성일</th>
                                         <th class="col-md-1">조회</th>
-                                        <th class="col-md-1">처리</th>
                                     </tr>
                                 </thead>
                                 <tbody><?php
                                 foreach ($rows as $val) {
                                     $row_no += 1;
                                     $idx = $val['b_idx'];
+
                                     if ($val['b_depth'] > 0) {
-                                        $indent = str_repeat('&nbsp;&nbsp;', $val['b_depth']).'<i class="fa fa-angle-right"></i> ';
+                                        $indent = str_repeat('&nbsp;&nbsp;', $val['b_depth']) .'<i class="fa fa-angle-right"></i> ';
                                     } else {
                                         $indent = '';
                                     }
-                                    $regDate = date('Y-m-d', strtotime($val['b_reg_date']));
-                                    if (array_key_exists($val['t_step'], $step)) {
-                                        $str_step = $step[$val['t_step']];
+
+                                    if (hasAuth($auth['a_view'])) {
+                                        $title = $indent .'<a href="'. $_SERVER['PHP_SELF'] .'?enter=v&idx='. $idx .'&'. getQuery() .'">'.$val['b_title'] .'</a>';
                                     } else {
-                                        $str_step = '-';
+                                        $title = $val['b_title'];
                                     }
+
+                                    $regDate = date('Y-m-d', strtotime($val['b_reg_date']));
                                     ?>
 
                                     <tr>
                                         <td><?=$row_no?></td>
-                                        <td class="ellipsis-base ellipsis-title"><?=$indent?><a href="<?=$_SERVER['PHP_SELF']?>?enter=v&idx=<?=$idx?>&<?=getQuery()?>"><?=$val['b_title']?></a></td>
+                                        <td class="ellipsis-base ellipsis-title"><?=$title?></td>
                                         <td class="ellipsis-base ellipsis-name"><?=$val['b_name']?></td>
                                         <td><?=$regDate?></td>
                                         <td><?=$val['b_count']?></td>
-                                        <td><?=$str_step?></td>
                                     </tr><?php
                                 } ?>
 
