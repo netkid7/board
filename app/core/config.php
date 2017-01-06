@@ -19,13 +19,14 @@ set_include_path(realpath(BASE_PATH).PATH_SEPARATOR.get_include_path());
 
 define('APP_PATH', 'app/');
 define('UPLOAD_PATH', 'uploads/');
+define('PAGE_PATH', 'pages/');
 
 include_once 'class.php'; // __DIR__.'class.php' >= ver 5.3.0
 include_once 'func.lib.php';
 
 // if (isset($_SESSION["_id"])) {
 // } else {
-//     if ($_SERVER['PHP_SELF'] !== '/login.php') {
-//         header("Location: /login.php");
+//     if ($_SERVER['PHP_SELF'] !== '/member/index.php') {
+//         header("Location: /member/index.php");
 //     }
 // }

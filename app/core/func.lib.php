@@ -38,13 +38,33 @@ function noInject($value, $option = true)
 }
 
 /*
+ * 내용 페이지를 보여준다.
+ * @param string 내용 페이지 파일이름
+ * @param array 상하단에 필요한 css, js 파일 경로
+ * 
+ */
+function renderPage($page, $data)
+{
+    if (is_file(BASE_PATH.PAGE_PATH.$page)) {
+        $content_page = PAGE_PATH.$page;
+
+        extract($data);
+        include_once APP_PATH.'view/base.html';
+    } else {
+        $page_title = $page;
+        include_once APP_PATH.'view/blank.html';
+    }
+}
+
+
+/*
  * 세션의 레벨값이 최소접근 권한보다 작으면 접근할 수 없다.
  * @param int 최소접근 권한
  * history.back()
  */
 function checkAuth($minLevel)
 {
-    if (isset($_SESSION['_level']) && ($minLevel > $_SESSION['_level'])) {
+    if (empty($_SESSION['_level']) || ($minLevel > $_SESSION['_level'])) {
         popupMsg('접근 권한이 없습니다.');
         exit();
     }
@@ -57,7 +77,7 @@ function checkAuth($minLevel)
  */
 function hasAuth($level)
 {
-    return ($level <= $_SESSION['_level']);
+    return (isset($_SESSION['_level']) && ($level <= $_SESSION['_level']));
 }
 
 function getAuthButton($level, $strButton)
@@ -67,7 +87,7 @@ function getAuthButton($level, $strButton)
 
 function isAdmin()
 {
-    return (99 == $_SESSION['_level']);
+    return (isset($_SESSION['_level']) && (99 == $_SESSION['_level']));
 }
 
 /*

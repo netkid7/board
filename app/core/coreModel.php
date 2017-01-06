@@ -21,7 +21,7 @@ class CoreModel // extends PDO
     {
         $sql = "
             SELECT *
-            FROM cc_auth
+            FROM brn_auth
             WHERE a_table = :table";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':table', $tableName, PDO::PARAM_STR);
