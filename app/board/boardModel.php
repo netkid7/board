@@ -12,6 +12,11 @@ class BoardModel extends CoreModel
         $this->_row_page = 30;
     }
 
+    public function getTable()
+    {
+        return $this->_table;
+    }
+
     public function getAuth()
     {
         return $this->selectAuth($this->_table);
@@ -41,11 +46,10 @@ class BoardModel extends CoreModel
         $result['row_no'] = $offset_page;
         if (!empty($search)) {
             $sql = "
-                SELECT b.*, IFNULL(t_step, 0) AS t_step
-                FROM $this->_table AS b LEFT JOIN cc_task AS t
-                ON b_ref = t_parent_ref AND t_parent = '{$this->_table}'
+                SELECT *
+                FROM $this->_table
                 WHERE ".implode(' AND ', $search)."
-                ORDER BY b_notice DESC, t_step ASC, b_ref DESC, b_order ASC
+                ORDER BY b_notice DESC, b_ref DESC, b_order ASC
                 LIMIT $offset_page, $this->_row_page";
             $stmt = $this->connection->prepare($sql);
             foreach ($param as $key => &$val) {
@@ -53,10 +57,9 @@ class BoardModel extends CoreModel
             }
         } else {
             $sql = "
-                SELECT b.*, IFNULL(t_step, 0) AS t_step
-                FROM $this->_table AS b LEFT JOIN cc_task AS t
-                ON b_ref = t_parent_ref AND t_parent = '{$this->_table}'
-                ORDER BY b_notice DESC, t_step ASC, b_ref DESC, b_order ASC
+                SELECT *
+                FROM $this->_table
+                ORDER BY b_notice DESC, b_ref DESC, b_order ASC
                 LIMIT $offset_page, $this->_row_page";
             $stmt = $this->connection->prepare($sql);
         }
@@ -208,7 +211,7 @@ class BoardModel extends CoreModel
             FROM $this->_table
             WHERE b_parent = :idx";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':idx', $targetIdx, PDO::PARAM_STR);
+        $stmt->bindParam(':idx', $targetIdx, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetch(PDO::FETCH_ASSOC);

@@ -4,8 +4,8 @@ class BoardControl
     private $_model;
     private $_view;
     private $_row;
+    private $_table;    // attach와 연결에 쓸 자신이 테이블 이름
     private $_attach;
-    private $_task;
     private $_auth;
 
     public function __construct()
@@ -14,11 +14,12 @@ class BoardControl
         $this->_model = loadClass('BoardModel', 'board');
         $this->_model->setRow($this->_row);
         $this->_view = loadClass('BoardView', 'board');
+
         $this->_auth = $this->_model->getAuth();
 
+        $this->_table = $this->_model->getTable();
         $this->_attach = loadClass('AttachControl', 'attach');
         $this->_attach->setUploadExtension();
-        $this->_task = loadClass('TaskControl', 'task');
     }
 
     private function urlQuery()
@@ -39,8 +40,6 @@ class BoardControl
         $data = $this->_model->selectAll($query['get_page']);
         $data['total_page'] = (int)ceil($data['total_count'] / $this->_row);
         $data['auth'] = $this->_auth;
-
-        $data['step'] = $this->_task->getStep();
 
         $data = array_merge($data, $query);
 
@@ -68,9 +67,7 @@ class BoardControl
         $data['b_content'] = nl2br($data['b_content']);
 
         $data['auth'] = $this->_auth;
-        $data['b_attach'] = $this->_attach->view('cc_board', $code);
-        $data['b_task'] = $this->_task->view('cc_board', $data['b_ref']);
-
+        $data['b_attach'] = $this->_attach->view($this->_table, $code);
 
         $this->_view->view($data);
     }
@@ -97,8 +94,7 @@ class BoardControl
                 $this->getBlank());
             $data['b_parent'] = '';
 
-            $data['b_attach'] = $this->_attach->write('cc_board', '', $this->_auth['f_attach_count']);
-            $data['b_task'] = $this->_task->write('cc_board', $data['b_ref']);
+            $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_auth['f_attach_count']);
 
             $data['auth'] = $this->_auth;
 
@@ -119,8 +115,7 @@ class BoardControl
 
             $idx = $this->_model->insert();
 
-            $this->_attach->write('cc_board', $idx);
-            $this->_task->write('cc_board', $idx);
+            $this->_attach->write($this->_table, $idx);
 
             $url = 'index.php'.$url;
             header("Location: $url");
@@ -139,8 +134,7 @@ class BoardControl
             $data['b_title'] = 'Re:'.$parent['b_title'];
             $data['b_parent'] = htmlspecialchars_decode($parent['b_content']);
 
-            $data['b_attach'] = $this->_attach->write('cc_board', '', $this->_auth['f_attach_count']);
-            $data['b_task'] = $this->_task->write('cc_board', $parent['b_ref']);
+            $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_auth['f_attach_count']);
 
             $data['auth'] = $this->_auth;
 
@@ -170,8 +164,7 @@ class BoardControl
             $idx = $this->_model->insert();
 
             $data = $this->getBoard($idx);
-            $this->_attach->write('cc_board', $idx);
-            $this->_task->modify('cc_board', $data['b_ref'], $step);
+            $this->_attach->write($this->_table, $idx);
 
             $url = 'index.php'.$url;
             header("Location: $url");
@@ -196,8 +189,7 @@ class BoardControl
             $data['b_parent'] = '';
             $data['b_content'] = htmlspecialchars_decode($data['b_content']);
 
-            $data['b_attach'] = $this->_attach->modify('cc_board', $code, $this->_auth['f_attach_count']);
-            $data['b_task'] = $this->_task->write('cc_board', $data['b_ref']);
+            $data['b_attach'] = $this->_attach->modify($this->_table, $code, $this->_auth['f_attach_count']);
 
             $data['auth'] = $this->_auth;
 
@@ -229,8 +221,7 @@ class BoardControl
             $this->_model->update();
 
             $data = $this->getBoard($_POST['idx']);
-            $this->_attach->modify('cc_board', $_POST['idx'], $this->_auth['f_attach_count']);
-            $this->_task->modify('cc_board', $data['b_ref'], $step);
+            $this->_attach->modify($this->_table, $_POST['idx'], $this->_auth['f_attach_count']);
 
             $url = 'index.php'.$url;
             header("Location: $url");
@@ -257,8 +248,7 @@ class BoardControl
 
             $this->_model->delete();
 
-            $this->_attach->removeAll('cc_board', $_POST['idx']);
-            // task는 지우지 않는다, for 메인글이 아니고 답변 가운데 일부일 수 있기 때문이다.
+            $this->_attach->removeAll($this->_table, $_POST['idx']);
 
             $url = 'index.php'.$url;
             header("Location: $url");
