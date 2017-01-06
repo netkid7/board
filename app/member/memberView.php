@@ -16,6 +16,16 @@ class MemberView extends CoreView
         $this->render($fileName, $data);
     }
 
+    public function login($data)
+    {
+        $data['cssLink'] = array('/app/css/hide_left.css');
+        $data['scriptHeader'] = array();
+        $data['scriptFooter'] = array();
+
+        $data['btnAction'] = '로그인';
+        $this->render('loginForm', $data);
+    }
+
     public function memberView($data)
     {
         // $data['cssLink'] = array('/css/bootstrap/bootstrap.min.css');
@@ -89,17 +99,22 @@ class MemberView extends CoreView
 
     private function render($page, $data)
     {
-        if (file_exists($this->_file_path.$page.'.php')) {
+        if (is_file($this->_file_path.$page.'.php')) {
+            $exist_page = TRUE;
             $content_page = $this->_view_path.$page.'.php';
-        } elseif (file_exists($this->_file_path.$page.'.html')) {
+        } elseif (is_file($this->_file_path.$page.'.html')) {
+            $exist_page = TRUE;
             $content_page = $this->_view_path.$page.'.html';
         } else {
-            $page_title = $page;
-            $content_page = APP_PATH.'view/blank.html';
+            $exist_page = FALSE;
         }
 
-        extract($data);
-
-        include_once $this->base;
+        if ($exist_page) {
+            extract($data);
+            include_once $this->base;
+        } else {
+            $page_title = $page;
+            include_once APP_PATH.'view/blank.html';
+        }
     }
 }

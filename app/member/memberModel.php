@@ -8,7 +8,7 @@ class MemberModel extends CoreModel
     {
         parent::__construct();
 
-        $this->_table = 'btn_member';
+        $this->_table = 'brn_member';
         $this->_row_page = 30;
     }
 
@@ -154,6 +154,7 @@ class MemberModel extends CoreModel
         }
 
         $encryptedPwd = $this->getEncrypt($_POST['password']);
+        $level = 1;
         $state = 'y';
 
         $sql = "
@@ -167,7 +168,7 @@ class MemberModel extends CoreModel
         $stmt->bindParam(1, $_POST['id']);
         $stmt->bindParam(2, $encryptedPwd);
         $stmt->bindParam(3, $_POST['name']);
-        $stmt->bindParam(4, $_POST['level']);
+        $stmt->bindParam(4, $level);
         $stmt->bindParam(5, $state);
         $stmt->bindParam(6, $_POST['email']);
         $stmt->bindParam(7, $_POST['dept']);
@@ -193,7 +194,7 @@ class MemberModel extends CoreModel
             WHERE m_idx = :m_idx";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':m_name', $_POST['name'], PDO::PARAM_STR);
-        $stmt->bindParam(':m_level', $_POST['level'], PDO::PARAM_INT);
+        $stmt->bindParam(':m_level', $_SESSION['_level'], PDO::PARAM_INT);
         $stmt->bindParam(':m_email', $_POST['email'], PDO::PARAM_STR);
         $stmt->bindParam(':m_dept', $_POST['dept'], PDO::PARAM_STR);
         $stmt->bindParam(':m_phone', $_POST['phone'], PDO::PARAM_STR);
@@ -282,7 +283,7 @@ class MemberModel extends CoreModel
         return $stmt->execute();
     }
 
-    public function updatePassword()
+    public function updatePassword($idx)
     {
         $encryptedPwd = $this->getEncrypt($_POST['password']);
 
@@ -292,7 +293,7 @@ class MemberModel extends CoreModel
             WHERE m_idx = :m_idx";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':m_password', $encryptedPwd, PDO::PARAM_STR);
-        $stmt->bindParam(':m_idx', $_POST['idx'], PDO::PARAM_INT);
+        $stmt->bindParam(':m_idx', $idx, PDO::PARAM_INT);
 
         return $stmt->execute();
     }

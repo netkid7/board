@@ -43,9 +43,16 @@ class MemberControl
 
     public function logIn()
     {
+        if (isset($_SESSION['_idx'])) {
+            $this->memberView();
+            return;
+        }
+
         if (empty($_POST)) {
-            $url = '/login.php';
-            header("Location: $url");
+            $data = array('hdnAction'=>'login');
+            $data['id_pattern'] = $this->_idPattern;
+
+            $this->_view->login($data);
         } else {
             
             $result = $this->_model->active();
@@ -64,7 +71,7 @@ class MemberControl
                 //     setcookie("saveid",  $_POST["m_id"], 0);
                 // }
 
-                $url = '/cctv/index.php'.$url;
+                $url = '/index.php'; //.$url;
                 header("Location: $url");
             } else {
                 popupMsg('아이디 또는 비밀번호가 일치하지 않습니다.');
@@ -83,7 +90,7 @@ class MemberControl
 
     public function memberView()
     {
-        if ($_SESSION['_idx']) {
+        if (!empty($_SESSION['_idx'])) {
             $data = $this->getMember($_SESSION["_idx"] );
             $data['m_level'] = $this->_level[$data['m_level']];
             $data['m_last_in'] = ($data['m_last_in'])? date('Y-m-d H:m', strtotime($data['m_last_in'])): '';
@@ -99,9 +106,9 @@ class MemberControl
     {
         if (empty($_POST)) {
             // $this->getBlank();
-            $data = array_merge(array('hdnAction'=>'add', 'hdnDupl'=>'0'), 
+            $data = array_merge(array('hdnAction'=>'reg', 'hdnDupl'=>'0'), 
                 $this->getBlank());
-            $data['level'] = array_slice($this->_level, -2, null, TRUE);
+            // $data['level'] = array_slice($this->_level, -2, null, TRUE);
             $data['id_pattern'] = $this->_idPattern;
 
             $this->_view->memberWrite($data);
@@ -140,9 +147,9 @@ class MemberControl
     public function memberModify()
     {
         if (empty($_POST)) {
-            $data = array_merge(array('hdnAction'=>'mod', 'hdnDupl'=>'1'), 
+            $data = array_merge(array('hdnAction'=>'correct', 'hdnDupl'=>'1'), 
                 $this->getMember($_SESSION['_idx']));
-            $data['level'] = array_slice($this->_level, -2, null, TRUE);
+            // $data['level'] = array_slice($this->_level, -2, null, TRUE);
             $data['id_pattern'] = $this->_idPattern;
 
             $this->_view->memberModify($data);
@@ -159,16 +166,14 @@ class MemberControl
 
             if ($result) {
                 $_SESSION["_name"]   = $_POST['name'];
-                $_SESSION["_level"]  = $_POST['level'];
             }
 
             // 패스워드가 입력되어 있으면 수정한다.
             if ($_POST['password']) {
-                $this->_model->updatePassword();
+                $this->_model->updatePassword($_SESSION['_idx']);
             }
 
-            $url = '/login_ctrl.php?mode=info'.$url;
-            header("Location: $url");
+            $this->memberView();
         }
     }
 
@@ -309,9 +314,7 @@ class MemberControl
 
             $this->_view->modify($data);
         } else {
-            // 접근 권한 확인후 적용
-
-            $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
+            $url = (empty($_POST['url']))? '?': '?'.$_POST['url'].'&';
 
             // model에서 쿼리문 구성을 위해 unset()
             unset($_POST['action']);
@@ -323,10 +326,10 @@ class MemberControl
 
             // 패스워드가 입력되어 있으면 수정한다.
             if ($_POST['password']) {
-                $this->_model->updatePassword();
+                $this->_model->updatePassword($_POST['idx']);
             }
 
-            $url = 'index.php'.$url;
+            $url = 'index.php'. $url .'enter=v&idx='. $_POST['idx'];
             header("Location: $url");
         }
     }
