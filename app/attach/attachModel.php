@@ -184,26 +184,6 @@ class AttachModel extends CoreModel
         }
 
         $this->deleteFileRow($keys);
-
-        // if ($keys) {
-        //     $sql = "
-        //         SELECT a_save_name 
-        //         FROM $this->_table
-        //         WHERE a_idx IN ($keys)";
-        //     $stmt = $this->connection->prepare($sql);
-        //     $stmt->execute();
-        //     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        //     foreach ($result as $val) {
-        //         deleteFile($val['a_save_name']);
-        //     }
-
-        //     $sql = "
-        //         DELETE FROM $this->_table WHERE a_idx IN ($keys)";
-        //     $stmt = $this->connection->prepare($sql);
-        //     return $stmt->execute();
-        // } else {
-        //     return false;
-        // }
     }
 
     public function showColumns()

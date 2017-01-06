@@ -38,22 +38,27 @@ class AttachView extends CoreView
 
     private function render($page, $data)
     {
-        if (file_exists($this->_file_path.$page.'.php')) {
+        if (is_file($this->_file_path.$page.'.php')) {
+            $exist_page = TRUE;
             $content_page = $this->_view_path.$page.'.php';
-        } elseif (file_exists($this->_file_path.$page.'.html')) {
+        } elseif (is_file($this->_file_path.$page.'.html')) {
+            $exist_page = TRUE;
             $content_page = $this->_view_path.$page.'.html';
         } else {
-            $page_title = $page;
-            $content_page = APP_PATH.'view/blank.html';
+            $exist_page = FALSE;
         }
 
-        extract($data);
+        if ($exist_page) {
+            extract($data);
 
-        ob_start();
-        include_once $content_page;
-        $html = ob_get_contents();
-        ob_end_clean();
+            ob_start();
+            include_once $content_page;
+            $html = ob_get_contents();
+            ob_end_clean();
 
-        return $html;
+            return $html;
+        } else {
+            return "$page 페이지를 찾을 수 없습니다.";
+        }
     }
 }
