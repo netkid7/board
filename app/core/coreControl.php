@@ -1,8 +1,6 @@
 <?php
 class CoreControl
 {
-    private static $masters;
-
     protected $_model;
     protected $_view;
 
