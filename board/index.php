@@ -2,6 +2,7 @@
 include_once implode(DIRECTORY_SEPARATOR, array(dirname(__FILE__), '..', 'app', 'core', 'config.php'));
 
 $board = loadClass('BoardControl', 'board');
+$board->setMasterPage('app/view/master.html');
 
 if (!empty($_POST['action'])) {
     switch ($_POST['action']) {
