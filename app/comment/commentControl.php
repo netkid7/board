@@ -1,17 +1,15 @@
 <?php
-class CommentControl
+class CommentControl extends CoreControl
 {
-    private $_model;
-    private $_view;
     private $_row;
     private $_auth;
 
     public function __construct()
     {
+        parent::__construct('comment');
+
         $this->_row = 20;
-        $this->_model = loadClass('CommentModel', 'comment');
         $this->_model->setRow($this->_row);
-        $this->_view = loadClass('CommentView', 'comment');
 
         $this->_auth = $this->_model->getAuth();
     }

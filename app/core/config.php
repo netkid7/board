@@ -15,10 +15,15 @@ header("Content-Type: text/html; charset= UTF-8");
 define('BASE_PATH', $_SERVER['DOCUMENT_ROOT'].'/');
 define('DS', DIRECTORY_SEPARATOR);
 
+// DB 연결정보: coreModel.php 에 있는 connDetails 수정.
+
 set_include_path(realpath(BASE_PATH).PATH_SEPARATOR.get_include_path());
 
+// 게시판 프로그램 설치 폴더
 define('APP_PATH', 'app/');
+// 첨부파일 등록 폴더
 define('UPLOAD_PATH', 'uploads/');
+// 일반 콘텐츠 페이지가 있는 폴더
 define('PAGE_PATH', 'pages/');
 
 include_once 'class.php'; // __DIR__.'class.php' >= ver 5.3.0

@@ -1,4 +1,16 @@
 /*
+ * IE 브라우저의 버전을 확인한다.
+ *
+ * return int IE 버전 / IE 가 아니면 undefined
+ */
+function getIEVersion() {
+    var match = navigator.userAgent.match(/(?:MSIE |Trident\/.*; rv:)(\d+)/);
+    return match ? parseInt(match[1]) : undefined;
+}
+
+
+
+/*
  * 목록 헤더를 클릭하여 항목별로 정렬
  * jquery, font-awesome 필요
 <form name="frmSearch" id="frmSearch" method="GET" class="form-horizontal" action="<?=$_SERVER['PHP_SELF']?>">

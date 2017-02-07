@@ -59,16 +59,26 @@ if (empty($get_s)) {
                                     $row_no += 1;
                                     $idx = $val['b_idx'];
 
+                                    // 댓글 들여쓰기
                                     if ($val['b_depth'] > 0) {
                                         $indent = str_repeat('&nbsp;&nbsp;', $val['b_depth']) .'<i class="fa fa-angle-right"></i> ';
                                     } else {
                                         $indent = '';
                                     }
 
+                                    $title = $val['b_title'];
+                                    // 공지 표시
+                                    if ($val['b_notice'] == '1') {
+                                        $title = '[공지] '.$title;
+                                    }
+
                                     if (hasAuth($auth['a_view'])) {
-                                        $title = $indent .'<a href="'. $_SERVER['PHP_SELF'] .'?enter=v&idx='. $idx .'&'. getQuery() .'">'.$val['b_title'] .'</a>';
-                                    } else {
-                                        $title = $val['b_title'];
+                                        $title = $indent .'<a href="'. $_SERVER['PHP_SELF'] .'?enter=v&idx='. $idx .'&'. getQuery() .'">'.$title .'</a>';
+                                    }
+
+                                    // 비밀글 자물쇠 표시
+                                    if ($val['b_secret'] == '1') {
+                                        $title .= ' <i class="fa fa-lock"></i>';
                                     }
 
                                     $regDate = date('Y-m-d', strtotime($val['b_reg_date']));

@@ -1,8 +1,6 @@
 <?php
-class BoardControl
+class BoardControl extends CoreControl
 {
-    private $_model;
-    private $_view;
     private $_row;
     private $_table;    // attach와 연결에 쓸 자신이 테이블 이름
     private $_attach;
@@ -10,10 +8,10 @@ class BoardControl
 
     public function __construct()
     {
+        parent::__construct('board');
+
         $this->_row = 20;
-        $this->_model = loadClass('BoardModel', 'board');
         $this->_model->setRow($this->_row);
-        $this->_view = loadClass('BoardView', 'board');
 
         $this->_auth = $this->_model->getAuth();
 

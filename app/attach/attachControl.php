@@ -1,14 +1,12 @@
 <?php
-class AttachControl
+class AttachControl extends CoreControl
 {
-    private $_model;
     private $_row;
-    private $_view;
 
     public function __construct()
     {
-        $this->_model = loadClass('AttachModel', 'attach');
-        $this->_view = loadClass('AttachView', 'attach');
+        parent::__construct('attach');
+
         $this->_row = 1;
     }
 

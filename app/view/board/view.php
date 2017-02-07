@@ -8,21 +8,21 @@
                             <table class="table table-striped">
                                 <tbody>
                                     <tr>
-                                        <th class="col-md-2">작성자 ID</th>
+                                        <th class="col-md-2">ID</th>
                                         <td class="col-md-4"><?=$b_id?></td>
-                                        <th class="col-md-2">작성자 email</th>
+                                        <th class="col-md-2">email</th>
                                         <td class="col-md-4"><?=$b_email?></td>
                                     </tr>
                                     <tr>
-                                        <th>작성자 이름</th>
+                                        <th>이름</th>
                                         <td><?=$b_name?></td>
-                                        <th>작성일</th>
+                                        <th>일자</th>
                                         <td><?=substr($b_reg_date, 0, -3)?></td>
                                     </tr>
                                     <tr>
                                         <th>조회</th>
                                         <td><?=$b_count?></td>
-                                        <th>작성 IP</th>
+                                        <th>IP</th>
                                         <td><?=$b_reg_IP?></td>
                                     </tr>
                                     <tr>

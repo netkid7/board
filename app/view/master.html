@@ -1,0 +1,71 @@
+<?php
+if (empty($cssLink)) {
+    $cssLink = array();
+}
+if (empty($scriptHeader)) {
+    $scriptHeader = array();
+}
+if (empty($scriptFooter)) {
+    $scriptFooter = array();
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta content="ie=edge" http-equiv="x-ua-compatible" />
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Board 시스템</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/app/css/custom.css" />
+<?php
+foreach ($cssLink as $val) { ?>
+
+    <link rel="stylesheet" href="<?=$val?>" /><?php
+}
+?>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/js/jquery/jquery-1.12.4.min.js"></script>
+<?php
+foreach ($scriptHeader as $val) { ?>
+
+    <script src="<?=$val?>"></script><?php
+}
+?>
+
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div id="navbar-left" class="col-sm-3 col-md-2">
+                Left
+            </div>
+
+            <div class="col-sm-9 col-md-10">
+<?php
+include_once $content_page;?>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="/js/bootstrap/bootstrap.min.js"></script>
+<?php
+foreach ($scriptFooter as $val) { ?>
+
+    <script src="<?=$val?>"></script><?php
+}
+?>
+
+</body>
+</html>
