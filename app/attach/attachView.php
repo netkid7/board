@@ -1,19 +1,16 @@
 <?php
-class AttachView extends CoreView
+class AttachView
 {
+    private $fileExt;
     private $_file_path;
     private $_view_path;
 
     public function __construct()
     {
-        parent::__construct();
+        $this->fileExt = array('.php', '.html');
+
         $this->_file_path = BASE_PATH.APP_PATH.'view/attach/';
         $this->_view_path = APP_PATH.'view/attach/';
-    }
-
-    public function index($data)
-    {
-        return $this->render('list', $data);
     }
 
     public function view($data)
@@ -31,24 +28,18 @@ class AttachView extends CoreView
         return $this->render('form', $data);
     }
 
-    public function remove($data)
+    protected function render($page, $data)
     {
-        return $this->render('remove', '');
-    }
+        $content_page = NULL;
 
-    private function render($page, $data)
-    {
-        if (is_file($this->_file_path.$page.'.php')) {
-            $exist_page = TRUE;
-            $content_page = $this->_view_path.$page.'.php';
-        } elseif (is_file($this->_file_path.$page.'.html')) {
-            $exist_page = TRUE;
-            $content_page = $this->_view_path.$page.'.html';
-        } else {
-            $exist_page = FALSE;
+        foreach ($this->fileExt as $val) {
+            if (is_file($this->_file_path.$page.$val)) {
+                $content_page = $this->_view_path.$page.$val;
+                break;
+            }
         }
 
-        if ($exist_page) {
+        if ($content_page) {
             extract($data);
 
             ob_start();

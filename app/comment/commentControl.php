@@ -14,17 +14,13 @@ class CommentControl extends CoreControl
         $this->_auth = $this->_model->getAuth();
     }
 
-    public function index()
+    public function index($parent, $parentIdx)
     {
         checkAuth($this->_auth['a_list']);
 
-        $query = $this->urlQuery();
-
-        $data = $this->_model->selectAll($query['get_page']);
+        $data = $this->_model->selectAll($parent, $parentIdx);
         $data['total_page'] = (int)ceil($data['total_count'] / $this->_row);
         $data['auth'] = $this->_auth;
-
-        $data = array_merge($data, $query);
 
         $this->_view->index($data);
     }
@@ -44,8 +40,8 @@ class CommentControl extends CoreControl
         }
 
         $data = $this->getComment($code);
-        $data['b_content'] = htmlspecialchars_decode($data['b_content']);
-        $data['b_content'] = nl2br($data['b_content']);
+        $data['c_content'] = htmlspecialchars_decode($data['c_content']);
+        $data['c_content'] = nl2br($data['c_content']);
 
         $data['auth'] = $this->_auth;
 
@@ -72,7 +68,7 @@ class CommentControl extends CoreControl
             // var_dump($this->getBlank());
             $data = array_merge(array('hdnAction'=>'add', 'hdnParent'=>'', 'hdnIdx'=>''), 
                 $this->getBlank());
-            $data['b_parent'] = '';
+            $data['c_parent'] = '';
 
 
             $data['auth'] = $this->_auth;

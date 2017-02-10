@@ -3,8 +3,10 @@ class BoardControl extends CoreControl
 {
     private $_row;
     private $_table;    // attach와 연결에 쓸 자신이 테이블 이름
-    private $_attach;
     private $_auth;
+
+    private $_attach;
+    private $_comment;
 
     public function __construct()
     {
@@ -14,10 +16,11 @@ class BoardControl extends CoreControl
         $this->_model->setRow($this->_row);
 
         $this->_auth = $this->_model->getAuth();
-
         $this->_table = $this->_model->getTable();
+
         $this->_attach = loadClass('AttachControl', 'attach');
         $this->_attach->setUploadExtension();
+        $this->_comment = loadClass('CommentControl', 'comment');
     }
 
     private function urlQuery()
@@ -66,6 +69,8 @@ class BoardControl extends CoreControl
 
         $data['auth'] = $this->_auth;
         $data['b_attach'] = $this->_attach->view($this->_table, $code);
+
+        $data['b_comment'] = $this->_comment->index($this->_table, $code);
 
         $this->_view->view($data);
     }

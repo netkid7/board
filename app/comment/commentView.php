@@ -1,55 +1,35 @@
 <?php
-class CommentView extends CoreView
+class CommentView
 {
+    private $fileExt;
     private $_file_path;
     private $_view_path;
 
     public function __construct()
     {
-        parent::__construct();
+        $this->fileExt = array('.php', '.html');
+
         $this->_file_path = BASE_PATH.APP_PATH.'view/comment/';
         $this->_view_path = APP_PATH.'view/comment/';
     }
 
-    public function page($fileName, $data)
-    {
-        $this->render($fileName, $data);
-    }
-
     public function index($data)
     {
-        $data['cssLink'] = array();
-        $data['scriptHeader'] = array();
-        $data['scriptFooter'] = array();
-
         $this->render('list', $data);
     }
 
     public function view($data)
     {
-        $data['cssLink'] = array();
-        $data['scriptHeader'] = array();
-        $data['scriptFooter'] = array();
         $this->render('view', $data);
     }
 
     public function write($data)
     {
-        $data['cssLink'] = array();
-        $data['scriptHeader'] = array();
-        $data['scriptFooter'] = array();
-
-        $data['btnAction'] = '등록';
         $this->render('form', $data);
     }
 
     public function modify($data)
     {
-        $data['cssLink'] = array();
-        $data['scriptHeader'] = array();
-        $data['scriptFooter'] = array();
-
-        $data['btnAction'] = '수정';
         $this->render('form', $data);
     }
 
@@ -72,7 +52,13 @@ class CommentView extends CoreView
 
         if ($exist_page) {
             extract($data);
-            include_once $this->base;
+
+            ob_start();
+            include_once $content_page;
+            $html = ob_get_contents();
+            ob_end_clean();
+
+            return $html;
         } else {
             $page_title = $page;
             include_once APP_PATH.'view/blank.html';

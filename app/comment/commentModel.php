@@ -22,10 +22,10 @@ class CommentModel extends CoreModel
         $this->_row_page = $row;
     }
 
-    public function selectAll($ref, $page)
+    public function selectAll($parent, $parantIdx, $page = 1)
     {
-        $search = array("c_ref = :ref");
-        $param  = array(':ref' => $ref);
+        $search = array("c_parent = :c_parent", "c_parent_idx = :c_parent_idx");
+        $param  = array(':c_parent' => $parent, ':c_parent_idx' => $parantIdx);
 
         $result = array();
         $result['total_count'] = $this->getRowCount($search, $param);
