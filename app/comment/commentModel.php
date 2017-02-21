@@ -24,8 +24,8 @@ class CommentModel extends CoreModel
 
     public function selectAll($parent, $parantIdx, $page = 1)
     {
-        $search = array("c_parent = :c_parent", "c_parent_idx = :c_parent_idx");
-        $param  = array(':c_parent' => $parent, ':c_parent_idx' => $parantIdx);
+        $search = array("c_main = :c_main", "c_main_idx = :c_main_idx");
+        $param  = array(':c_main' => $parent, ':c_main_idx' => $parantIdx);
 
         $result = array();
         $result['total_count'] = $this->getRowCount($search, $param);

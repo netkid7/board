@@ -29,6 +29,11 @@ define('PAGE_PATH', 'pages/');
 include_once 'class.php'; // __DIR__.'class.php' >= ver 5.3.0
 include_once 'func.lib.php';
 
+// 방문자(not login)를 위한 최저 레벨 설정
+if(!isset($_SESSION['_level'])) {
+    $_SESSION['_level'] = '0';
+}
+
 // if (isset($_SESSION["_id"])) {
 // } else {
 //     if ($_SERVER['PHP_SELF'] !== '/member/index.php') {

@@ -11,6 +11,9 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+/* root 계정으로 DB: btnTools 를 만들고 사용자를 등록한다. */
+Grant all privileges on brnTools.* to brntools@'%' identified by 'brntools#0701'
+
 -- 테이블 brighten.brn_attach 구조 내보내기
 CREATE TABLE IF NOT EXISTS `brn_attach` (
   `a_idx` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -41,30 +44,30 @@ CREATE TABLE IF NOT EXISTS `brn_auth` (
   `a_remove` tinyint(3) NOT NULL DEFAULT '0' COMMENT '>= a_view',
   `a_reply` tinyint(3) NOT NULL DEFAULT '0' COMMENT '>= a_view 작성권한',
   `a_comment` tinyint(3) NOT NULL DEFAULT '0' COMMENT '>= a_view 작성권한',
+  `a_comment_reply` tinyint(3) NOT NULL DEFAULT '0' COMMENT '>= a_view 작성권한',
   `a_notice` tinyint(3) NOT NULL DEFAULT '0' COMMENT '>= a_create',
   `a_secret` tinyint(3) NOT NULL DEFAULT '0' COMMENT '>= a_create',
   `a_attach` tinyint(3) NOT NULL DEFAULT '0' COMMENT '>= a_create',
-  `f_reply` varchar(5) NOT NULL DEFAULT 'y' COMMENT '답글 사용여부',
-  `f_comment` varchar(5) NOT NULL DEFAULT 'y' COMMENT '덧글 사용여부',
+  `f_reply` varchar(5) NOT NULL DEFAULT 'n' COMMENT '답글 사용여부',
+  `f_comment` varchar(5) NOT NULL DEFAULT 'n' COMMENT '덧글 사용여부',
+  `f_comment_reply` varchar(5) NOT NULL DEFAULT 'n' COMMENT '덧글 사용여부',
   `f_notice` varchar(5) NOT NULL DEFAULT 'y' COMMENT '공지사항 사용여부',
   `f_secret` varchar(5) NOT NULL DEFAULT 'n' COMMENT '비밀글 사용여부',
   `f_attach_count` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'max_count(첨부파일)',
   `f_attach_type` varchar(200) NOT NULL COMMENT '첨부파일 확장자',
   PRIMARY KEY (`a_idx`),
   KEY `a_table` (`a_table`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='각 권한별 최소 접근 레벨\r\nCRUD 는 기본 기능이므로 기능 사용여부 없음\r\n그외는 권한+기능 조합';
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COMMENT='각 권한별 최소 접근 레벨\r\nCRUD 는 기본 기능이므로 기능 사용여부 없음\r\n그외는 권한+기능 조합';
 
--- 테이블 데이터 brighten.brn_auth:8 rows 내보내기
+-- 테이블 데이터 brighten.brn_auth:6 rows 내보내기
 /*!40000 ALTER TABLE `brn_auth` DISABLE KEYS */;
-INSERT INTO `brn_auth` (`a_idx`, `a_table`, `a_list`, `a_view`, `a_write`, `a_download`, `a_modify`, `a_remove`, `a_reply`, `a_comment`, `a_notice`, `a_secret`, `a_attach`, `f_reply`, `f_comment`, `f_notice`, `f_secret`, `f_attach_count`, `f_attach_type`) VALUES
-	(1, 'brn_member', 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 0, 'y', 'y', 'n', 'n', 0, ''),
-	(2, 'brn_notice', 1, 1, 9, 1, 9, 9, 0, 0, 0, 0, 9, 'y', 'y', 'y', 'n', 3, ''),
-	(3, 'brn_board', 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 1, 'n', 'n', 'y', 'y', 2, ''),
-	(4, 'brn_gallery', 1, 1, 1, 1, 1, 1, 1, 1, 9, 1, 1, 'y', 'y', 'y', 'y', 2, 'jpg,png,bmp,gif'),
-	(5, 'brn_pds', 1, 1, 9, 1, 9, 9, 0, 0, 9, 0, 9, 'y', 'y', 'y', 'n', 2, '*'),
-	(6, 'brn_qan', 1, 1, 1, 0, 9, 9, 1, 1, 9, 0, 0, 'y', 'y', 'y', 'n', 2, 'jpg,png,bmp,gif'),
-	(7, 'brn_walk', 9, 9, 1, 9, 9, 9, 0, 0, 9, 0, 0, 'n', 'n', 'n', 'n', 0, ''),
-	(8, 'brn_comment', 1, 1, 1, 0, 1, 1, 0, 9, 0, 0, 0, 'n', 'n', 'n', 'n', 0, '');
+INSERT INTO `brn_auth` (`a_idx`, `a_table`, `a_list`, `a_view`, `a_write`, `a_download`, `a_modify`, `a_remove`, `a_reply`, `a_comment`, `a_comment_reply`, `a_notice`, `a_secret`, `a_attach`, `f_reply`, `f_comment`, `f_comment_reply`, `f_notice`, `f_secret`, `f_attach_count`, `f_attach_type`) VALUES
+	(1, 'brn_member', 9, 9, 9, 9, 9, 9, 0, 0, 0, 0, 0, 0, 'n', 'n', 'n', 'n', 'n', 0, ''),
+	(2, 'brn_notice', 1, 1, 9, 1, 9, 9, 0, 0, 0, 0, 0, 9, 'n', 'n', 'n', 'y', 'n', 3, ''),
+	(3, 'brn_board', 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 1, 'y', 'y', 'y', 'y', 'y', 2, ''),
+	(4, 'brn_gallery', 1, 1, 1, 1, 1, 1, 1, 1, 0, 9, 1, 1, 'y', 'y', 'n', 'y', 'y', 2, 'jpg,png,bmp,gif'),
+	(5, 'brn_pds', 1, 1, 9, 1, 9, 9, 0, 0, 0, 9, 0, 9, 'n', 'n', 'n', 'y', 'n', 2, '*'),
+	(6, 'brn_qan', 1, 1, 1, 0, 9, 9, 1, 1, 1, 9, 1, 9, 'y', 'y', 'y', 'y', 'y', 2, 'jpg,png,bmp,gif');
 /*!40000 ALTER TABLE `brn_auth` ENABLE KEYS */;
 
 -- 테이블 brighten.brn_board 구조 내보내기
@@ -253,27 +256,6 @@ CREATE TABLE IF NOT EXISTS `brn_qna` (
 -- 테이블 데이터 brighten.brn_qna:0 rows 내보내기
 /*!40000 ALTER TABLE `brn_qna` DISABLE KEYS */;
 /*!40000 ALTER TABLE `brn_qna` ENABLE KEYS */;
-
--- 테이블 brighten.brn_walk 구조 내보내기
-CREATE TABLE IF NOT EXISTS `brn_walk` (
-  `w_idx` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `w_name` varchar(100) NOT NULL COMMENT '이름',
-  `w_sex` tinyint(3) unsigned NOT NULL COMMENT '성별',
-  `w_age` tinyint(3) unsigned NOT NULL COMMENT '나이',
-  `w_tel` varchar(50) NOT NULL COMMENT '연락처',
-  `w_app` varchar(100) NOT NULL COMMENT '사용앱',
-  `w_reg_IP` varchar(50) DEFAULT NULL,
-  `w_reg_date` datetime DEFAULT NULL,
-  PRIMARY KEY (`w_idx`),
-  KEY `w_name_w_tel` (`w_name`,`w_tel`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='걷기왕 신청내역';
-
--- 테이블 데이터 brighten.brn_walk:~2 rows (대략적) 내보내기
-/*!40000 ALTER TABLE `brn_walk` DISABLE KEYS */;
-INSERT INTO `brn_walk` (`w_idx`, `w_name`, `w_sex`, `w_age`, `w_tel`, `w_app`, `w_reg_IP`, `w_reg_date`) VALUES
-	(2, '나이름1', 1, 35, '018-1478-5236', '기타', '127.0.0.1', '2017-02-09 13:20:37'),
-	(3, '김아름', 2, 28, '010-0123-2232', 'stepz', '127.0.0.1', '2017-02-09 14:18:36');
-/*!40000 ALTER TABLE `brn_walk` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

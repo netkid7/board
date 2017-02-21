@@ -1,14 +1,54 @@
 <?php
-class CommentControl extends CoreControl
+class AuthControl extends CoreControl
 {
     private $_row;
 
     public function __construct()
     {
-        parent::__construct('comment');
+        parent::__construct('auth');
 
         $this->_row = 20;
         $this->_model->setRow($this->_row);
+    }
+
+
+    private function hasAble($func, $level)
+    {
+        return (($func == 'y') && $this->hasAuth($level));
+    }
+
+    private function hasAuth($level)
+    {
+        return (isset($_SESSION['_level']) && ($_SESSION['_level']) >= $level);
+    }
+
+    public function getAuthBy($tableName)
+    {
+        $data = $this->_model->selectAuth($tableName);
+
+        $result = array(
+            'auth_list' => $this->hasAuth($data['a_list']),
+            'auth_view' => $this->hasAuth($data['a_view']),
+            'auth_write' => $this->hasAuth($data['a_write']),
+            'auth_download' => $this->hasAuth($data['a_download']),
+            'auth_modify' => $this->hasAuth($data['a_modify']),
+            'auth_remove' => $this->hasAuth($data['a_remove']),
+            'auth_reply' => $this->hasAble($data['f_reply'], $data['a_reply']),
+            'auth_comment' => $this->hasAble($data['f_comment'], $data['a_comment']),
+            'auth_comment_reply' => $this->hasAble($data['f_comment_reply'], $data['a_comment_reply']),
+            'auth_notice' => $this->hasAble($data['f_notice'], $data['a_notice']),
+            'auth_secret' => $this->hasAble($data['f_secret'], $data['a_secret']),
+            'auth_attach' => ($this->hasAuth($data['a_attach']) && ($data['f_attach_count'] > 0)),
+            'auth_attach_count' => $data['f_attach_count'],
+            'auth_attach_type' => $data['f_attach_type']
+            );
+
+        return $result;
+    }
+
+    public function isAdmin()
+    {
+        return $this->hasAuth(9);
     }
 
     public function index($parent, $parentIdx, $page = 1)
@@ -19,7 +59,7 @@ class CommentControl extends CoreControl
         $this->_view->index($data);
     }
 
-    public function getComment($code)
+    public function getAuth($code)
     {
         return $this->_model->select($code);
     }
@@ -31,7 +71,7 @@ class CommentControl extends CoreControl
             exit;
         }
 
-        $data = $this->getComment($code);
+        $data = $this->getAuth($code);
         $data['c_content'] = htmlspecialchars_decode($data['c_content']);
         $data['c_content'] = nl2br($data['c_content']);
 
@@ -81,48 +121,6 @@ class CommentControl extends CoreControl
         }
     }
 
-    public function rewrite($code = '')
-    {
-        if (empty($_POST)) {
-            $parent = $this->getComment($code);
-            $data = array_merge(array('hdnAction'=>'rep', 'hdnParent'=>$code, 'hdnIdx'=>''), 
-                $this->getBlank());
-
-            $data['b_title'] = 'Re:'.$parent['b_title'];
-            $data['b_parent'] = htmlspecialchars_decode($parent['b_content']);
-
-            $this->_view->write($data);
-        } else {
-            $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
-            $step = $_POST['step'];
-
-            // model에서 쿼리문 구성을 위해 unset()
-            unset($_POST['action']);
-            unset($_POST['idx']);
-            unset($_POST['url']);
-            unset($_POST['step']);
-
-
-            $_POST['title'] = strip_tags($_POST['title']);
-            $_POST['name'] = strip_tags($_POST['name']);
-            $_POST['email'] = strip_tags($_POST['email']);
-
-            // 답글앞에 원본글 내용 추가
-            $parent = $this->getComment($_POST['parent']);
-            $parentContent = '<ul class="reply"><li>'.htmlspecialchars_decode($parent['b_content']).'</li></ul>';
-            $_POST['content'] = $parentContent.$_POST['content'];
-
-            $_POST['content'] = htmlspecialchars($_POST['content']);
-
-            $idx = $this->_model->insert();
-
-            $data = $this->getComment($idx);
-
-            $url = 'index.php'.$url;
-            header("Location: $url");
-        }
-    }
-
     public function modify($code = '')
     {
         if (empty($_POST)) {
@@ -135,7 +133,7 @@ class CommentControl extends CoreControl
             }
 
             $data = array_merge(array('hdnAction'=>'mod', 'hdnParent'=>'', 'hdnIdx'=>$code), 
-                $this->getComment($code));
+                $this->getAuth($code));
             $data['b_parent'] = '';
             $data['b_content'] = htmlspecialchars_decode($data['b_content']);
 
@@ -166,7 +164,7 @@ class CommentControl extends CoreControl
 
             $this->_model->update();
 
-            $data = $this->getComment($_POST['idx']);
+            $data = $this->getAuth($_POST['idx']);
 
             $url = 'index.php'.$url;
             header("Location: $url");
