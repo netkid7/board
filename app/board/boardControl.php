@@ -110,9 +110,9 @@ class BoardControl extends CoreControl
             unset($_POST['idx']);
             unset($_POST['url']);
 
-            $_POST['title'] = strip_tags($_POST['title']);
-            $_POST['name'] = strip_tags($_POST['name']);
-            $_POST['email'] = strip_tags($_POST['email']);
+            $_POST['title'] = htmlspecialchars(strip_tags($_POST['title']));
+            $_POST['name'] = htmlspecialchars(strip_tags($_POST['name']));
+            $_POST['email'] = htmlspecialchars(strip_tags($_POST['email']));
 
             $_POST['content'] = htmlspecialchars($_POST['content']);
 
@@ -153,9 +153,9 @@ class BoardControl extends CoreControl
             unset($_POST['step']);
 
 
-            $_POST['title'] = strip_tags($_POST['title']);
-            $_POST['name'] = strip_tags($_POST['name']);
-            $_POST['email'] = strip_tags($_POST['email']);
+            $_POST['title'] = htmlspecialchars(strip_tags($_POST['title']));
+            $_POST['name'] = htmlspecialchars(strip_tags($_POST['name']));
+            $_POST['email'] = htmlspecialchars(strip_tags($_POST['email']));
 
             // 답글앞에 원본글 내용 추가
             $parent = $this->getBoard($_POST['parent']);
@@ -215,9 +215,9 @@ class BoardControl extends CoreControl
             unset($_POST['url']);
             unset($_POST['step']);
 
-            $_POST['title'] = strip_tags($_POST['title']);
-            $_POST['name'] = strip_tags($_POST['name']);
-            $_POST['email'] = strip_tags($_POST['email']);
+            $_POST['title'] = htmlspecialchars(strip_tags($_POST['title']));
+            $_POST['name'] = htmlspecialchars(strip_tags($_POST['name']));
+            $_POST['email'] = htmlspecialchars(strip_tags($_POST['email']));
 
             $_POST['content'] = htmlspecialchars($_POST['content']);
 
