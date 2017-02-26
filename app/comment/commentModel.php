@@ -22,10 +22,10 @@ class CommentModel extends CoreModel
         $this->_row_page = $row;
     }
 
-    public function selectAll($parent, $parantIdx, $page = 1)
+    public function selectAll($master, $masterIdx, $page = 1)
     {
         $search = array("c_main = :c_main", "c_main_idx = :c_main_idx");
-        $param  = array(':c_main' => $parent, ':c_main_idx' => $parantIdx);
+        $param  = array(':c_main' => $master, ':c_main_idx' => $masterIdx);
 
         $result = array();
         $result['total_count'] = $this->getRowCount($search, $param);
@@ -115,15 +115,15 @@ class CommentModel extends CoreModel
 
         $c_idx = $this->connection->lastInsertId();
 
-        $this->updateRef($c_idx, $_POST['parent']);
+        $this->updateRef($c_idx, $_POST['master']);
 
         return $c_idx;
     }
 
-    private function updateRef($targetIdx, $parentIdx = '')
+    private function updateRef($targetIdx, $masterIdx = '')
     {
-        if ($parentIdx) {
-            $parent = $this->select($parentIdx);
+        if ($masterIdx) {
+            $master = $this->select($masterIdx);
 
             // 들어가야할 순서위치
             $sql = "
@@ -132,14 +132,14 @@ class CommentModel extends CoreModel
                 WHERE c_ref = :c_ref
                     AND c_parent = :c_parent";
             $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':c_ref', $parent['c_ref']);
-            $stmt->bindParam(':c_parent', $parent['c_idx']);
+            $stmt->bindParam(':c_ref', $master['c_ref']);
+            $stmt->bindParam(':c_parent', $master['c_idx']);
             $stmt->execute();
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
             $order = $row['r_order'];
             if ($order == '0') {
-                $order = $parent['c_order'];
+                $order = $master['c_order'];
             }
             $order += 1;
 
@@ -150,10 +150,10 @@ class CommentModel extends CoreModel
                 WHERE c_ref = :c_ref
                     AND c_order >= :c_order";
             $stmt = $this->connection->prepare($sql);
-            $stmt->execute(array(':c_ref' => $parent['c_ref'], ':c_order' => $order));
+            $stmt->execute(array(':c_ref' => $master['c_ref'], ':c_order' => $order));
 
 
-            $depth = $parent['c_depth'] + 1;
+            $depth = $master['c_depth'] + 1;
             $sql = "
                 UPDATE $this->_table
                 SET c_ref = :c_ref,
@@ -162,9 +162,9 @@ class CommentModel extends CoreModel
                     c_order = :c_order
                 WHERE c_idx = :c_idx";
             $stmt = $this->connection->prepare($sql);
-            $stmt->bindParam(':c_ref', $parent['c_ref']);
+            $stmt->bindParam(':c_ref', $master['c_ref']);
             $stmt->bindParam(':c_depth', $depth);   // bindParam()는 반드시 변수 사용!! 상수나 연산(결과가 상수)을 넣으면 안된다.
-            $stmt->bindParam(':c_parent', $parent['c_idx']);
+            $stmt->bindParam(':c_parent', $master['c_idx']);
             $stmt->bindParam(':c_order', $order);
             $stmt->bindParam(':c_idx', $targetIdx);
             $stmt->execute();
@@ -225,7 +225,7 @@ class CommentModel extends CoreModel
     {
         // 관리자에 의한 대상글의 답변까지 모두 삭제 필요
         // $sql = "
-        //     DELETE FROM $this->_table WHERE c_idx = :c_idx OR c_parent = :c_idx";
+        //     DELETE FROM $this->_table WHERE c_idx = :c_idx OR c_master = :c_idx";
         $sql = "
             DELETE FROM $this->_table WHERE c_idx = :c_idx";
         $stmt = $this->connection->prepare($sql);

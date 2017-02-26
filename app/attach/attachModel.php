@@ -25,16 +25,16 @@ class AttachModel extends CoreModel
     }
 
 
-    public function selectAttach($parent, $parentIdx)
+    public function selectAttach($master, $masterIdx)
     {
         $sql = "
                 SELECT * 
                 FROM $this->_table
-                WHERE a_parent = :a_parent AND a_parent_idx = :a_parent_idx
+                WHERE a_master = :a_master AND a_master_idx = :a_master_idx
                 ORDER BY a_idx ASC";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':a_parent', $parent, PDO::PARAM_STR);
-        $stmt->bindParam(':a_parent_idx', $parentIdx, PDO::PARAM_INT);
+        $stmt->bindParam(':a_master', $master, PDO::PARAM_STR);
+        $stmt->bindParam(':a_master_idx', $masterIdx, PDO::PARAM_INT);
         $stmt->execute();
         $result['rows'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -53,7 +53,7 @@ class AttachModel extends CoreModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function insert($parent, $parentIdx)
+    public function insert($master, $masterIdx)
     {
         $insertRows = array();
         // summmernote(js)에서 추가한 image FormData 는 첨부파일에 포함하지 않는다.
@@ -67,8 +67,8 @@ class AttachModel extends CoreModel
                 continue;
             } else {
                 $insertRows[] = array(
-                    $parent,
-                    $parentIdx,
+                    $master,
+                    $masterIdx,
                     $result['upload_name'],
                     $result['save_name']
                     );
@@ -80,7 +80,7 @@ class AttachModel extends CoreModel
         } else {
             $sql = "
                 INSERT INTO $this->_table (
-                    a_parent, a_parent_idx, a_file_name, a_save_name)
+                    a_master, a_master_idx, a_file_name, a_save_name)
                 VALUES (". implode(', ', array_fill(0, count($insertRows[0]), '?')) .")";
             
             $stmt = $this->connection->prepare($sql);
@@ -105,8 +105,8 @@ class AttachModel extends CoreModel
 
         $sql = "
             UPDATE $this->_table
-            SET a_parent = :parent,
-                a_parent_idx = :parent_idx,
+            SET a_master = :master,
+                a_master_idx = :master_idx,
                 a_file_name = :file_name,
                 a_save_name = :save_name
             WHERE a_idx = :a_idx";
@@ -118,9 +118,9 @@ class AttachModel extends CoreModel
         return $stmt->execute();
     }
 
-    public function deleteOld($parent, $parentIdx, $maxCount)
+    public function deleteOld($master, $masterIdx, $maxCount)
     {
-        $data = $this->selectAttach($parent, $parentIdx);
+        $data = $this->selectAttach($master, $masterIdx);
 
         $deleteCount = count($data['rows']) - $maxCount;
         if ($deleteCount > 0) {
@@ -133,9 +133,9 @@ class AttachModel extends CoreModel
         }
     }
 
-    public function deleteAll($parent, $parentIdx)
+    public function deleteAll($master, $masterIdx)
     {
-        $data = $this->selectAttach($parent, $parentIdx);
+        $data = $this->selectAttach($master, $masterIdx);
         $keys = array();
         foreach ($data['rows'] as $val) {
             $keys = $val['a_idx'];
