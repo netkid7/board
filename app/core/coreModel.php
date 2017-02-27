@@ -6,7 +6,6 @@ class CoreModel // extends PDO
 
     public function __construct()
     {
-        // $connDetails = "localhost|brighten|brighten|qmfkdlxms";
         $connDetails = "localhost|nx_tools|developer|roqkfwk@9";
         if (!is_object(self::$databases[$connDetails])) {
             list($host, $dbname, $user, $pass) = explode('|', $connDetails);
