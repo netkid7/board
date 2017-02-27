@@ -15,7 +15,7 @@ class CommentView
 
     public function index($data)
     {
-        $this->render('list', $data);
+        return $this->render('list', $data);
     }
 
     public function view($data)
@@ -40,17 +40,15 @@ class CommentView
 
     private function render($page, $data)
     {
-        if (is_file($this->_file_path.$page.'.php')) {
-            $exist_page = TRUE;
-            $content_page = $this->_view_path.$page.'.php';
-        } elseif (is_file($this->_file_path.$page.'.html')) {
-            $exist_page = TRUE;
-            $content_page = $this->_view_path.$page.'.html';
-        } else {
-            $exist_page = FALSE;
+        $content_page = NULL;
+        foreach ($this->fileExt as $val) {
+            if (is_file($this->_file_path.$page.$val)) {
+                $content_page = $this->_view_path.$page.$val;
+                break;
+            }
         }
 
-        if ($exist_page) {
+        if ($content_page) {
             extract($data);
 
             ob_start();

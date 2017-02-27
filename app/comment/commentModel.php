@@ -24,32 +24,23 @@ class CommentModel extends CoreModel
 
     public function selectAll($master, $masterIdx, $page = 1)
     {
-        $search = array("c_main = :c_main", "c_main_idx = :c_main_idx");
-        $param  = array(':c_main' => $master, ':c_main_idx' => $masterIdx);
+        $search = array("c_master = :c_master", "c_master_idx = :c_master_idx");
+        $param  = array(':c_master' => $master, ':c_master_idx' => $masterIdx);
 
         $result = array();
         $result['total_count'] = $this->getRowCount($search, $param);
 
         $offset_page = ($page - 1) * $this->_row_page;
         $result['row_no'] = $offset_page;
-        if (!empty($search)) {
-            $sql = "
-                SELECT *
-                FROM $this->_table
-                WHERE ".implode(' AND ', $search)."
-                ORDER BY c_order ASC
-                LIMIT $offset_page, $this->_row_page";
-            $stmt = $this->connection->prepare($sql);
-            foreach ($param as $key => &$val) {
-                $stmt->bindParam($key, $val);
-            }
-        } else {
-            $sql = "
-                SELECT *
-                FROM $this->_table
-                ORDER BY c_order ASC
-                LIMIT $offset_page, $this->_row_page";
-            $stmt = $this->connection->prepare($sql);
+        $sql = "
+            SELECT *
+            FROM $this->_table
+            WHERE ".implode(' AND ', $search)."
+            ORDER BY c_order ASC
+            LIMIT $offset_page, $this->_row_page";
+        $stmt = $this->connection->prepare($sql);
+        foreach ($param as $key => &$val) {
+            $stmt->bindParam($key, $val);
         }
         $stmt->execute();
         $result['rows'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -59,20 +50,13 @@ class CommentModel extends CoreModel
 
     private function getRowCount($search = array(), $param = array())
     {
-        if (!empty($search)) {
-            $sql = "
-                SELECT COUNT(*) AS c_count
-                FROM $this->_table
-                WHERE ".implode(' AND ', $search);
-            $stmt = $this->connection->prepare($sql);
-            foreach ($param as $key => &$val) {
-                $stmt->bindParam($key, $val);
-            }
-        } else {
-            $sql = "
-                SELECT COUNT(*) AS c_count 
-                FROM $this->_table";
-            $stmt = $this->connection->prepare($sql);
+        $sql = "
+            SELECT COUNT(*) AS c_count
+            FROM $this->_table
+            WHERE ".implode(' AND ', $search);
+        $stmt = $this->connection->prepare($sql);
+        foreach ($param as $key => &$val) {
+            $stmt->bindParam($key, $val);
         }
         $stmt->execute();
         $row = $stmt->fetch();
@@ -94,21 +78,24 @@ class CommentModel extends CoreModel
         return $result;
     }
 
-    public function insert()
+    public function insert($master, $masterIdx)
     {
         $sql = "
             INSERT INTO $this->_table (
+                c_master, c_master_idx,
                 c_content, c_name, c_id, c_password, 
                 c_email, c_reg_IP, c_reg_date)
-            VALUES (". implode(', ', array_fill(0, 6, '?')) .", NOW())";
+            VALUES (". implode(', ', array_fill(0, 8, '?')) .", NOW())";
         
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(1, $_POST['content']);
-        $stmt->bindParam(2, $_POST['name']);
-        $stmt->bindParam(3, $_SESSION['_id']);  // 작성자 ID
-        $stmt->bindParam(4, $_SESSION['_id']);  // 작성자 비밀번호
-        $stmt->bindParam(5, $_POST['email']);
-        $stmt->bindParam(6, $_SERVER['REMOTE_ADDR']);
+        $stmt->bindParam(1, $master);
+        $stmt->bindParam(2, $masterIdx);
+        $stmt->bindParam(3, $_POST['content']);
+        $stmt->bindParam(4, $_POST['name']);
+        $stmt->bindParam(5, $_SESSION['_id']);  // 작성자 ID
+        $stmt->bindParam(6, $_SESSION['_id']);  // 작성자 비밀번호
+        $stmt->bindParam(7, $_POST['email']);
+        $stmt->bindParam(8, $_SERVER['REMOTE_ADDR']);
 
         $stmt->execute();
         // $stmt->closeCursor();
@@ -225,7 +212,7 @@ class CommentModel extends CoreModel
     {
         // 관리자에 의한 대상글의 답변까지 모두 삭제 필요
         // $sql = "
-        //     DELETE FROM $this->_table WHERE c_idx = :c_idx OR c_master = :c_idx";
+        //     DELETE FROM $this->_table WHERE c_idx = :c_idx OR c_parent = :c_idx";
         $sql = "
             DELETE FROM $this->_table WHERE c_idx = :c_idx";
         $stmt = $this->connection->prepare($sql);

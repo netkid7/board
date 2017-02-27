@@ -11,12 +11,13 @@ class CommentControl extends CoreControl
         $this->_model->setRow($this->_row);
     }
 
-    public function index($parent, $parentIdx, $page = 1)
+    public function index($master, $masterIdx, $page = 1)
     {
-        $data = $this->_model->selectAll($parent, $parentIdx, $page);
+        $data = $this->_model->selectAll($master, $masterIdx, $page);
         $data['total_page'] = (int)ceil($data['total_count'] / $this->_row);
+        $data['get_page'] = $page;
 
-        $this->_view->index($data);
+        return $this->_view->index($data);
     }
 
     public function getComment($code)
