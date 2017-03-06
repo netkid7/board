@@ -6,7 +6,7 @@ class CoreModel // extends PDO
 
     public function __construct()
     {
-        $connDetails = "localhost|nx_tools|developer|roqkfwk@9";
+        $connDetails = "localhost|cooola|cooola|cooola0701";
         if (!is_object(self::$databases[$connDetails])) {
             list($host, $dbname, $user, $pass) = explode('|', $connDetails);
 
@@ -15,18 +15,5 @@ class CoreModel // extends PDO
             self::$databases[$connDetails]->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
         $this->connection = self::$databases[$connDetails];
-    }
-
-    public function selectAuth($tableName)
-    {
-        $sql = "
-            SELECT *
-            FROM brn_auth
-            WHERE a_table = :table";
-        $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':table', $tableName, PDO::PARAM_STR);
-        $stmt->execute();
-
-        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 }

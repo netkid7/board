@@ -1,5 +1,15 @@
 <?php
 ?>
+                <div class="row">
+                    <div class="col-md-12">
+                        <form name="frmComment" id="frmComment" class="form-horizontal">
+                            <input type="hidden" name="master" id="master" value="<?=$master?>" />
+                            <input type="hidden" name="master_idx" id="master_idx" value="<?=$master_idx?>" />
+                            <textarea name="content" class="form-control" id="content" cols="60" rows="3"></textarea>
+                            <button type="sumbit" class="form-control" >등록</button>
+                        </form>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-md-12">

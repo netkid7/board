@@ -28,7 +28,7 @@ if (empty($get_s)) {
                                         <span class="input-group-btn">
                                             <button type="submit" class="btn btn-primary" tabindex="3"> <i class="fa fa-search"></i> 검색</button>
                                             <a class="btn btn-default" href="<?=$_SERVER['PHP_SELF']?>"> 리스트</a>
-                                            <?=getAuthButton($auth['a_write'],
+                                            <?=getAuthButton($auth['auth_write'],
                                                 '<a href="'.$_SERVER['PHP_SELF'].'?enter=w&'.getQuery('enter','idx').'" class="btn btn-info"> <i class="fa fa-plus"></i> 추가</a>')?>
 
                                         </span>
@@ -47,10 +47,10 @@ if (empty($get_s)) {
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th class="col-md-2">ID</th>
+                                        <th class="col-md-4">ID</th>
                                         <th class="col-md-2">이름</th>
                                         <th>그룹</th>
-                                        <th class="col-md-2">연락처</th>
+                                        <th>타입</th>
                                         <th>상태</th>
                                         <th class="col-md-2">최근 로그인</th>
                                     </tr>
@@ -66,9 +66,9 @@ if (empty($get_s)) {
                                     <tr>
                                         <td><?=$row_no?></td>
                                         <td><a href="<?=$_SERVER['PHP_SELF']?>?enter=v&idx=<?=$idx?>&<?=getQuery()?>"><?=$val['m_id']?></a></td>
-                                        <td><?=$val['m_name']?></td>
+                                        <td class="ellipsis-name ellipsis-name-l"><?=$val['m_name']?></td>
                                         <td><?=$strLevel?></td>
-                                        <td><?=$val['m_phone']?></td>
+                                        <td><?=$val['m_type']?></td>
                                         <td><?=$strState?></td>
                                         <td><?=$lastIn?></td>
                                     </tr><?php

@@ -9,7 +9,7 @@ class AttachModel extends CoreModel
     {
         parent::__construct();
 
-        $this->_table = 'brn_attach';
+        $this->_table = 'coo_attach';
         $this->_upload_func = 'uploadByDate';
         $this->_upload_ext = array("jpg", "png", "bmp", "gif");
     }

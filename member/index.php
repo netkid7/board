@@ -56,17 +56,9 @@ if (!empty($_POST['action'])) {
             $member->memberLeave();
             break;
         default:
-            if (isAdmin()) {
-                $member->index();
-            } else {
-                $member->memberView();
-            }
+            $member->dispatcher();
     }
 } else {
-    if (isAdmin()) {
-        $member->index();
-    } else {
-        $member->logIn();
-    }
+    $member->dispatcher();
 }
 

@@ -8,7 +8,7 @@ class AuthModel extends CoreModel
     {
         parent::__construct();
 
-        $this->_table = 'brn_auth';
+        $this->_table = 'coo_auth';
         $this->_row_page = 30;
     }
 
@@ -116,29 +116,29 @@ class AuthModel extends CoreModel
                 a_table, a_list, a_view, a_write, a_download, a_modify, a_remove, 
                 a_reply, a_comment, a_comment_reply, a_notice, a_secret, a_attach, 
                 f_reply, f_comment, f_comment_reply, f_notice, f_secret, f_attach_count, f_attach_type)
-            VALUES (". implode(', ', array_fill(0, 6, '?')) .", NOW())";
+            VALUES (". implode(', ', array_fill(0, 20, '?')) .")";
         
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(, $_POST['table']);
-        $stmt->bindParam(, $_POST['list']);
-        $stmt->bindParam(, $_POST['view']);
-        $stmt->bindParam(, $_POST['write']);
-        $stmt->bindParam(, $_POST['download']);
-        $stmt->bindParam(, $_POST['modify']);
-        $stmt->bindParam(, $_POST['remove']);
-        $stmt->bindParam(, $_POST['reply']);
-        $stmt->bindParam(, $_POST['comment']);
-        $stmt->bindParam(, $_POST['commentReply']);
-        $stmt->bindParam(, $_POST['notice']);
-        $stmt->bindParam(, $_POST['secret']);
-        $stmt->bindParam(, $_POST['attach']);
-        $stmt->bindParam(, $_POST['fReply']);
-        $stmt->bindParam(, $_POST['fComment']);
-        $stmt->bindParam(, $_POST['fCommentReply']);
-        $stmt->bindParam(, $_POST['fNotice']);
-        $stmt->bindParam(, $_POST['fSecret']);
-        $stmt->bindParam(, $_POST['fAttachCount']);
-        $stmt->bindParam(, $_POST['fAttachType']);
+        $stmt->bindParam(1, $_POST['table']);
+        $stmt->bindParam(2, $_POST['list']);
+        $stmt->bindParam(3, $_POST['view']);
+        $stmt->bindParam(4, $_POST['write']);
+        $stmt->bindParam(5, $_POST['download']);
+        $stmt->bindParam(6, $_POST['modify']);
+        $stmt->bindParam(7, $_POST['remove']);
+        $stmt->bindParam(8, $_POST['reply']);
+        $stmt->bindParam(9, $_POST['comment']);
+        $stmt->bindParam(10, $_POST['commentReply']);
+        $stmt->bindParam(11, $_POST['notice']);
+        $stmt->bindParam(12, $_POST['secret']);
+        $stmt->bindParam(13, $_POST['attach']);
+        $stmt->bindParam(14, $_POST['fReply']);
+        $stmt->bindParam(15, $_POST['fComment']);
+        $stmt->bindParam(16, $_POST['fCommentReply']);
+        $stmt->bindParam(17, $_POST['fNotice']);
+        $stmt->bindParam(18, $_POST['fSecret']);
+        $stmt->bindParam(19, $_POST['fAttachCount']);
+        $stmt->bindParam(20, $_POST['fAttachType']);
 
         $stmt->execute();
 

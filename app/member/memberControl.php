@@ -1,19 +1,23 @@
 <?php
-class MemberControl
+class MemberControl extends CoreControl
 {
-    private $_model;
-    private $_view;
     private $_row;
+    private $_table;
+
     private $_level;
     private $_idPattern;
+
     private $_auth;
+    private $_authMap;
+    private $_attach;
 
     public function __construct()
     {
+        parent::__construct('member');
+
         $this->_row = 20;
-        $this->_model = loadClass('MemberModel', 'member');
         $this->_model->setRow($this->_row);
-        $this->_view = loadClass('MemberView', 'member');
+        $this->_table = $this->_model->getTable();
 
         $this->_level = array(
             99 => '최고관리자',
@@ -22,7 +26,117 @@ class MemberControl
             1 => '일반회원',
         );
         $this->_idPattern = '/^[a-zA-Z][0-9a-zA-Z_]{5,19}$/';
-        $this->_auth = $this->_model->getAuth();
+
+        $this->_auth = loadClass('AuthControl', 'auth');
+        $this->_authMap = $this->_auth->getAuthBy($this->_table);
+        $this->_attach = loadClass('AttachControl', 'attach');
+        $this->_attach->setUploadExtension();
+    }
+
+    private function appResponse($data)
+    {
+        $result = array(
+            'id' => '',
+            'gcm' => '',
+            'name' => '',
+            'type' => '',
+            'mail' => '',
+            'image' => '',
+            'msg' => ''
+            );
+
+        if (!is_array($data)) {
+            $data = array(
+                'id' => 'undefined',
+                'gcm' => 'undefined',
+                'msg' => $data);
+        }
+        foreach ($result as $key => &$val) {
+            if (array_key_exists($key, $data)) {
+                $val = $data[$key];
+            }
+        }
+
+        return $result;
+    }
+
+    // 앱에서 동영상이나 댓글에 사용할 키로서 사용자/회원정보
+    public function appMemberIdx()
+    {
+        if (empty($_POST)) {
+            return false;
+        }
+
+        $data = $this->_model->selectByID($_POST['ID']);
+        if ($data) {
+            return $data['m_idx'];
+        } else {
+            return false;
+        }
+    }
+
+    // 앱을 실행하면 우선 요청하며, 사용자/회원 정보를 제공한다.
+    public function appInit()
+    {
+        if (empty($_POST)) {
+            responseError($this->appResponse('no data'));
+        }
+
+        $result = $this->_model->appSelect();
+
+        if ($result) {
+            responseOK($this->appResponse($result));
+        } else {
+            responseError($this->appResponse('fail to search'));
+        }
+    }
+
+    // 앱에서 회원 등록할 때 호출한다.
+    public function appRegist()
+    {
+        if (empty($_POST)) {
+            responseError($this->appResponse('no data'));
+        }
+
+        $result = $this->_model->appInsert();
+
+        if ($result) {
+            responseOK($this->appResponse($result));
+        } else {
+            responseError($this->appResponse('fail to regist'));
+        }
+    }
+
+    // 앱에서 회원 정보를 수정할 때 호출한다.
+    public function appModify()
+    {
+        if (empty($_POST)) {
+            responseError($this->appResponse('no data'));
+        }
+
+        $result = $this->_model->appUpdate();
+
+        if ($result) {
+            responseOK($this->appResponse($result));
+        } else {
+            responseError($this->appResponse('fail to modify'));
+        }
+    }
+
+    // 앱에서 회원 탈퇴할 때 호출한다.
+    public function appLeave()
+    {
+        if (empty($_POST)) {
+            responseError($this->appResponse('no data'));
+        }
+
+        $result = $this->_model->appDelete();
+
+        if ($result) {
+            responseOK($this->appResponse($result));
+        } else {
+            responseError($this->appResponse('fail to leave'));
+        }
     }
 
     public function getLevel()
@@ -71,7 +185,7 @@ class MemberControl
                 //     setcookie("saveid",  $_POST["m_id"], 0);
                 // }
 
-                $url = '/index.php'; //.$url;
+                $url = '/member/index.php'; //.$url;
                 header("Location: $url");
             } else {
                 popupMsg('아이디 또는 비밀번호가 일치하지 않습니다.');
@@ -84,7 +198,7 @@ class MemberControl
     {
         session_unset();
 
-        $url = '/';
+        $url = '/member/';
         header("Location: $url");
     }
 
@@ -191,6 +305,15 @@ class MemberControl
         }
     }
 
+    public function dispatcher()
+    {
+        if ($this->_auth->isAdmin()) {
+            $this->index();
+        } else {
+            $this->memberView();
+        }
+    }
+
     private function urlQuery()
     {
         $get_page = (empty($_GET["page"]))? 1: noInject($_GET["page"]);
@@ -202,14 +325,14 @@ class MemberControl
 
     public function index()
     {
-        checkAuth($this->_auth['a_list']);
+        checkAuth($this->_authMap['auth_list']);
 
         $query = $this->urlQuery();
 
         $data = $this->_model->selectAll($query['get_page']);
         $data['total_page'] = (int)ceil($data['total_count'] / $this->_row);
         $data['level'] = $this->_level;
-        $data['auth'] = $this->_auth;
+        $data['auth'] = $this->_authMap;
 
         $data = array_merge($data, $query);
 
@@ -223,7 +346,7 @@ class MemberControl
 
     public function view($code)
     {
-        checkAuth($this->_auth['a_view']);
+        checkAuth($this->_authMap['auth_view']);
 
         if (empty($code)) {
             popupMsg('요청이 잘못되었습니다.');
@@ -236,7 +359,7 @@ class MemberControl
         $data['m_last_in'] = ($data['m_last_in'])? date('Y-m-d H:m', strtotime($data['m_last_in'])): '';
         $data['m_reg_date'] = ($data['m_reg_date'])? date('Y-m-d H:m', strtotime($data['m_reg_date'])): '';
         
-        $data['auth'] = $this->_auth;
+        $data['auth'] = $this->_authMap;
 
         $this->_view->view($data);
     }
@@ -267,7 +390,7 @@ class MemberControl
 
     public function write()
     {
-        checkAuth($this->_auth['a_write']);
+        checkAuth($this->_authMap['auth_write']);
 
         if (empty($_POST)) {
             // $this->getBlank();
@@ -304,7 +427,7 @@ class MemberControl
 
     public function modify($code)
     {
-        checkAuth($this->_auth['a_modify']);
+        checkAuth($this->_authMap['auth_modify']);
 
         if (empty($_POST)) {
             $data = array_merge(array('hdnAction'=>'mod', 'hdnIdx'=>$code, 'hdnDupl'=>'1'), 
@@ -336,7 +459,7 @@ class MemberControl
 
     public function remove()
     {
-        checkAuth($this->_auth['a_remove']);
+        checkAuth($this->_authMap['auth_remove']);
         
         if (empty($_POST)) {
             popupMsg('요청이 잘못되었습니다.');

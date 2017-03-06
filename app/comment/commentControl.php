@@ -16,6 +16,8 @@ class CommentControl extends CoreControl
         $data = $this->_model->selectAll($master, $masterIdx, $page);
         $data['total_page'] = (int)ceil($data['total_count'] / $this->_row);
         $data['get_page'] = $page;
+        $data['master'] = $master;
+        $data['master_idx'] = $masterIdx;
 
         return $this->_view->index($data);
     }

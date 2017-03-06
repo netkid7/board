@@ -8,8 +8,13 @@ class MemberModel extends CoreModel
     {
         parent::__construct();
 
-        $this->_table = 'brn_member';
+        $this->_table = 'coo_member';
         $this->_row_page = 30;
+    }
+
+    public function getTable()
+    {
+        return $this->_table;
     }
 
     public function getAuth()
@@ -117,6 +122,22 @@ class MemberModel extends CoreModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function selectByID($id)
+    {
+        $sql = "
+            SELECT m_id AS id, m_gcm AS gcm, 
+                m_name AS name, m_type AS type, 
+                m_email AS mail, m_image AS image,
+                m_idx, m_state
+            FROM $this->_table
+            WHERE m_id = :id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function existId($targetId)
     {
         $sql = "
@@ -153,26 +174,31 @@ class MemberModel extends CoreModel
             return FALSE;
         }
 
-        $encryptedPwd = $this->getEncrypt($_POST['password']);
+        $gcm = 'browser-regist';
         $level = 1;
+        $type = 'S';
+        $encryptedPwd = $this->getEncrypt($_POST['password']);
+        $profile = $this->appImage($_POST["id"]);
         $state = 'y';
+
 
         $sql = "
             INSERT INTO $this->_table (
-                m_id, m_password, m_name, m_level,
-                m_state, m_email, m_dept, m_phone,
-                m_reg_date)
-            VALUES (". implode(', ', array_fill(0, 8, '?')) .", NOW())";
+                m_id, m_gcm, m_level, m_type,
+                m_name, m_email, m_password, m_image, 
+                m_state, m_reg_date)
+            VALUES (". implode(', ', array_fill(0, 9, '?')) .", NOW())";
         
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(1, $_POST['id']);
-        $stmt->bindParam(2, $encryptedPwd);
-        $stmt->bindParam(3, $_POST['name']);
-        $stmt->bindParam(4, $level);
-        $stmt->bindParam(5, $state);
-        $stmt->bindParam(6, $_POST['email']);
-        $stmt->bindParam(7, $_POST['dept']);
-        $stmt->bindParam(8, $_POST['phone']);
+        $stmt->bindParam(1, $_POST['id'], PDO::PARAM_STR);
+        $stmt->bindParam(2, $gcm, PDO::PARAM_STR);
+        $stmt->bindParam(3, $level, PDO::PARAM_INT);
+        $stmt->bindParam(4, $type, PDO::PARAM_STR);
+        $stmt->bindParam(5, $_POST['name'], PDO::PARAM_STR);
+        $stmt->bindParam(6, $_POST['email'], PDO::PARAM_STR);
+        $stmt->bindParam(7, $encryptedPwd, PDO::PARAM_STR);
+        $stmt->bindParam(8, $profile, PDO::PARAM_STR);
+        $stmt->bindParam(9, $state, PDO::PARAM_STR);
 
         $stmt->execute();
         // $stmt->closeCursor();
@@ -184,20 +210,24 @@ class MemberModel extends CoreModel
 
     public function memberUpdate()
     {
+        $before = $this->selectByID($_SESSION["_id"]);
+        $profile = $this->appImage($_SESSION["_id"]);
+        if ($profile) {
+            deleteFile(urlencode($before['image']));
+        } else {
+            $profile = $before['image'];
+        }
+
         $sql = "
             UPDATE $this->_table
             SET m_name = :m_name,
-                m_level = :m_level,
                 m_email = :m_email,
-                m_dept = :m_dept,
-                m_phone = :m_phone
+                m_image = :m_image
             WHERE m_idx = :m_idx";
         $stmt = $this->connection->prepare($sql);
         $stmt->bindParam(':m_name', $_POST['name'], PDO::PARAM_STR);
-        $stmt->bindParam(':m_level', $_SESSION['_level'], PDO::PARAM_INT);
         $stmt->bindParam(':m_email', $_POST['email'], PDO::PARAM_STR);
-        $stmt->bindParam(':m_dept', $_POST['dept'], PDO::PARAM_STR);
-        $stmt->bindParam(':m_phone', $_POST['phone'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_image', $profile, PDO::PARAM_STR);
         
         $stmt->bindParam(':m_idx', $_SESSION["_idx"], PDO::PARAM_INT);
 
@@ -206,12 +236,171 @@ class MemberModel extends CoreModel
 
     public function memberDelete()
     {
+        $before = $this->selectByID($_SESSION["_id"]);
+        deleteFile(urlencode($before['image']));
+
         $sql = "
             UPDATE $this->_table
-            SET m_state = 'n'
+            SET m_type = NULL,
+                m_name = NULL,
+                m_email = NULL,
+                m_password = NULL,
+                m_image = NULL,
+                m_state = 'n'
             WHERE m_idx = :m_idx";
         $stmt = $this->connection->prepare($sql);
         return $stmt->execute(array(':m_idx' => $_SESSION["_idx"]));
+    }
+
+    public function appSelect()
+    {
+        if (!empty($_POST['ID'])) {
+            $data = $this->selectByID($_POST['ID']);
+            $this->updateLast($data['m_idx']);
+
+            // GCM ID 가 변경되면 반영한다.
+            if ($_POST['GCM'] != $data['gcm']) {
+                $sql = "
+                    UPDATE $this->_table
+                    SET m_gcm = :m_gcm
+                    WHERE m_id = :m_id";
+                $stmt = $this->connection->prepare($sql);
+                $stmt->bindParam(':m_gcm', $_POST['GCM'], PDO::PARAM_STR);
+                $stmt->bindParam(':m_id', $_POST["ID"], PDO::PARAM_STR);
+
+                $stmt->execute();
+
+                $data['gcm'] = $_POST['GCM'];
+            }
+
+            return $data;
+        } else {
+            $level = 1;
+            $state = 'y';
+
+            $sql = "
+                INSERT INTO $this->_table (
+                    m_id, m_gcm, m_level, m_state, m_reg_date)
+                VALUES (uuid(), ?, ?, ?, NOW())";
+            
+            $stmt = $this->connection->prepare($sql);
+            $stmt->bindParam(1, $_POST['GCM'], PDO::PARAM_STR);
+            $stmt->bindParam(2, $level, PDO::PARAM_INT);
+            $stmt->bindParam(3, $state, PDO::PARAM_STR);
+
+            $stmt->execute();
+
+            $m_idx = $this->connection->lastInsertId();
+
+            $data = $this->select($m_idx);
+            return $this->selectByID($data['m_id']);
+        }
+    }
+
+    private function appImage($prefix)
+    {
+        $uploadNames = uploadRearrange();
+
+        if (empty($uploadNames)) {
+            return '';
+        }
+
+        // 사용자 프로필 이미지 이름이 중복 가능성으로
+        // 이미지 앞에 id(uuid)의 8글자 첨부
+        $prefix = sprintf('%08s', substr($prefix, 0, 8));
+        $_FILES[$uploadNames[0]]['name'] = $prefix.$_FILES[$uploadNames[0]]['name'];
+
+        $result = uploadImage($uploadNames[0]);
+        return ($result['save_name'])? $result['save_name']: '';
+    }
+
+    // 모두 id를 가지고 있기 때문에 회원 가입은 기존 정보를 업데이트 한다.
+    public function appInsert()
+    {
+        if (empty($_POST['PASSWORD'])) {
+            $encryptedPwd = '';
+        } else {
+            $encryptedPwd = $this->getEncrypt($_POST['PASSWORD']);
+        }
+
+        $profile = $this->appImage($_POST["ID"]);
+
+        $sql = "
+            UPDATE $this->_table
+            SET m_type = :m_type,
+                m_name = :m_name,
+                m_email = :m_email,
+                m_password = :m_password,
+                m_image = :m_image
+            WHERE m_id = :m_id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':m_type', $_POST['TYPE'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_name', $_POST['NAME'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_email', $_POST['EMAIL'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_password', $encryptedPwd, PDO::PARAM_STR);
+        $stmt->bindParam(':m_image', $profile, PDO::PARAM_STR);
+        $stmt->bindParam(':m_id', $_POST["ID"], PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $this->selectByID($_POST['ID']);
+    }
+
+    public function appUpdate()
+    {
+        if (empty($_POST['PASSWORD'])) {
+            $encryptedPwd = '';
+        } else {
+            $encryptedPwd = $this->getEncrypt($_POST['PASSWORD']);
+        }
+
+        $before = $this->selectByID($_POST['ID']);
+        $profile = $this->appImage($_POST['ID']);
+        if ($profile) {
+            deleteFile(urlencode($before['image']));
+        } else {
+            $profile = $before['image'];
+        }
+
+        $sql = "
+            UPDATE $this->_table
+            SET m_name = :m_name,
+                m_email = :m_email,
+                m_password = :m_password,
+                m_image = :m_image
+            WHERE m_id = :m_id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':m_name', $_POST['NAME'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_email', $_POST['EMAIL'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_password', $encryptedPwd, PDO::PARAM_STR);
+        $stmt->bindParam(':m_image', $profile, PDO::PARAM_STR);
+        $stmt->bindParam(':m_id', $_POST["ID"], PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $this->selectByID($_POST['ID']);
+    }
+
+    // 앱에서 사용할 기본 id는 있어야 하므로, 삭제가 아닌 id를 제외한 컬럼을 Null 처리한다.
+    public function appDelete()
+    {
+        $before = $this->selectByID($_POST['ID']);
+        deleteFile(urlencode($before['image']));
+
+        $sql = "
+            UPDATE $this->_table
+            SET m_type = NULL,
+                m_name = NULL,
+                m_email = NULL,
+                m_password = NULL,
+                m_image = NULL,
+                m_state = 'n'
+            WHERE m_id = :m_id";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':m_id', $_POST["ID"], PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $this->selectByID($_POST['ID']);
     }
 
     public function insert()
@@ -221,24 +410,26 @@ class MemberModel extends CoreModel
         }
 
         $encryptedPwd = $this->getEncrypt($_POST['password']);
+        $profile = $this->appImage($_POST["id"]);
 
         $sql = "
             INSERT INTO $this->_table (
-                m_id, m_password, m_name, m_level,
-                m_state, m_email, m_dept, m_phone, m_memo,
-                m_reg_date)
-            VALUES (". implode(', ', array_fill(0, 9, '?')) .", NOW())";
+                m_id, m_gcm, m_level, m_type, 
+                m_name, m_email, m_password, m_image,
+                m_state, m_memo, m_reg_date)
+            VALUES (". implode(', ', array_fill(0, 10, '?')) .", NOW())";
         
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(1, $_POST['id']);
-        $stmt->bindParam(2, $encryptedPwd);
-        $stmt->bindParam(3, $_POST['name']);
-        $stmt->bindParam(4, $_POST['level']);
-        $stmt->bindParam(5, $_POST['state']);
-        $stmt->bindParam(6, $_POST['email']);
-        $stmt->bindParam(7, $_POST['dept']);
-        $stmt->bindParam(8, $_POST['phone']);
-        $stmt->bindParam(9, $_POST['memo']);
+        $stmt->bindParam(1, $_POST['id'], PDO::PARAM_STR);
+        $stmt->bindParam(2, $_POST['gcm'], PDO::PARAM_STR);
+        $stmt->bindParam(3, $_POST['level'], PDO::PARAM_INT);
+        $stmt->bindParam(4, $_POST['type'], PDO::PARAM_STR);
+        $stmt->bindParam(5, $_POST['name'], PDO::PARAM_STR);
+        $stmt->bindParam(6, $_POST['email'], PDO::PARAM_STR);
+        $stmt->bindParam(7, $encryptedPwd, PDO::PARAM_STR);
+        $stmt->bindParam(8, $profile, PDO::PARAM_STR);
+        $stmt->bindParam(9, $_POST['state'], PDO::PARAM_STR);
+        $stmt->bindParam(10, $_POST['memo'], PDO::PARAM_STR);
 
         $stmt->execute();
         // $stmt->closeCursor();
@@ -255,25 +446,34 @@ class MemberModel extends CoreModel
 
     public function update()
     {
+        $before = $this->select($_POST['idx']);
+        $profile = $this->appImage($before['m_id']);
+        if ($profile) {
+            deleteFile(urlencode($before['m_image']));
+        } else {
+            $profile = $before['m_image'];
+        }
         // $keys = array_map(array($this, 'nameHolder'), array_keys($_POST));
 
         $sql = "
             UPDATE $this->_table
-            SET m_name = :m_name,
+            SET m_gcm = :m_gcm,
                 m_level = :m_level,
-                m_state = :m_state,
+                m_type = :m_type,
+                m_name = :m_name,
                 m_email = :m_email,
-                m_dept = :m_dept,
-                m_phone = :m_phone,
+                m_image = :m_image,
+                m_state = :m_state,
                 m_memo = :m_memo
             WHERE m_idx = :m_idx";
         $stmt = $this->connection->prepare($sql);
-        $stmt->bindParam(':m_name', $_POST['name'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_gcm', $_POST['gcm'], PDO::PARAM_STR);
         $stmt->bindParam(':m_level', $_POST['level'], PDO::PARAM_INT);
-        $stmt->bindParam(':m_state', $_POST['state'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_type', $_POST['type'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_name', $_POST['name'], PDO::PARAM_STR);
         $stmt->bindParam(':m_email', $_POST['email'], PDO::PARAM_STR);
-        $stmt->bindParam(':m_dept', $_POST['dept'], PDO::PARAM_STR);
-        $stmt->bindParam(':m_phone', $_POST['phone'], PDO::PARAM_STR);
+        $stmt->bindParam(':m_image', $profile, PDO::PARAM_STR);
+        $stmt->bindParam(':m_state', $_POST['state'], PDO::PARAM_STR);
         $stmt->bindParam(':m_memo', $_POST['memo'], PDO::PARAM_STR);
         $stmt->bindParam(':m_idx', $_POST['idx'], PDO::PARAM_INT);
         // foreach ($keys as $key) {
@@ -310,6 +510,9 @@ class MemberModel extends CoreModel
 
     public function delete()
     {
+        $before = $this->select($_POST['idx']);
+        deleteFile(urlencode($before['m_image']));
+
         $sql = "
             DELETE FROM $this->_table WHERE m_idx = :m_idx";
         $stmt = $this->connection->prepare($sql);

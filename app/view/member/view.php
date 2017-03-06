@@ -1,3 +1,10 @@
+<?php
+if ($m_image) {
+    $profile = '<img src="/uploads/'.urlencode(urlencode($m_image)).'" style="width: 180px;" />';
+} else {
+    $profile = '';
+}
+?>
 
                 <h3>사용자 정보</h3>
 
@@ -8,44 +15,49 @@
                             <table class="table table-striped">
                                 <tbody>
                                     <tr>
-                                        <th class="col-md-3">아이디</th>
-                                        <td class="col-md-4"><?=$m_id?></td>
-                                        <th class="col-md-2">상태</th>
-                                        <td class="col-md-4"><?=$m_state?></td>
+                                        <th>아이디</th>
+                                        <td colspan="3"><?=$m_id?></td>
                                     </tr>
                                     <tr>
-                                        <th>이름</th>
-                                        <td><?=$m_name?></td>
-                                        <th>그룹</th>
-                                        <td><?=$m_level?></td>
+                                        <th>FCM</th>
+                                        <td colspan="3"><?=$m_gcm?></td>
                                     </tr>
                                     <tr>
-                                        <th>연락처</th>
-                                        <td colspan="3"><?=$m_phone?></td>
+                                        <th class="col-md-2">이름</th>
+                                        <td class="col-md-5"><?=$m_name?></td>
+                                        <th class="col-md-2">그룹</th>
+                                        <td class="col-md-3"><?=$m_level?></td>
+                                    </tr>
+                                    <tr>
+                                        <th>타입</th>
+                                        <td><?=$m_type?></td>
+                                        <th>상태</th>
+                                        <td><?=$m_state?></td>
                                     </tr>
                                     <tr>
                                         <th>이메일</th>
-                                        <td colspan="3"><?=$m_email?></td>
+                                        <td><?=$m_email?></td>
+                                        <td colspan="2" rowspan="4"><?=$profile?></td>
                                     </tr>
                                     <tr>
                                         <th>최근 로그인</th>
-                                        <td colspan="3"><?=$m_last_in?></td>
+                                        <td><?=$m_last_in?></td>
                                     </tr>
                                     <tr>
                                         <th>등록일자</th>
-                                        <td colspan="3"><?=$m_reg_date?></td>
+                                        <td><?=$m_reg_date?></td>
                                     </tr>
                                     <tr>
                                         <th>메모</th>
-                                        <td colspan="3"><?=$m_memo?></td>
+                                        <td><?=$m_memo?></td>
                                     </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <td colspan="2">
-                                        <?=getAuthButton($auth['a_remove'],
+                                        <?=getAuthButton($auth['auth_remove'],
                                             '<a href="'.$_SERVER['PHP_SELF'].'" class="btn btn-warning" data-method="delete" data-idx="'.$m_idx.'" data-url="'.getQuery('enter,idx').'" data-confirm="회원을 삭제하시겠습니까?">삭제</a>')?>
-                                        <?=getAuthButton($auth['a_modify'],
+                                        <?=getAuthButton($auth['auth_modify'],
                                             '<a href="'.$_SERVER['PHP_SELF'].'?enter=m&idx='.$m_idx.'&'.getQuery('enter,idx').'" class="btn btn-info">수정</a>')?>
                                         </td>
                                         <td colspan="2" class="text-right">

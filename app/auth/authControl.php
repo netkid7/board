@@ -11,12 +11,24 @@ class AuthControl extends CoreControl
         $this->_model->setRow($this->_row);
     }
 
-
+    /*
+     * 특정 게시판의 부가기능 사용 여부를 확인한다.
+     * 설정은 brn_auth 테이블에 있다.
+     * 부가기능 on + 부가기능 level
+     * @param string 사용하고자 하는 기능(oh/off)
+     * @param int 기능을 사용할 수 있는 최소권한
+     * 
+     */
     private function hasAble($func, $level)
     {
         return (($func == 'y') && $this->hasAuth($level));
     }
 
+    /*
+     * 특정 권한/레벨을 사용할 수 있는지 학인
+     * @param int 권한레벨
+     * return bool 권한이 있으면(레벨 <= 세션) TRUE;
+     */
     private function hasAuth($level)
     {
         return (isset($_SESSION['_level']) && ($_SESSION['_level']) >= $level);
