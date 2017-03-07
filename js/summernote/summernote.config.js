@@ -30,7 +30,7 @@ $(document).ready(function () {
         $.ajax({
             data: data,
             type: 'POST',
-            url: 'saveImage.php',
+            url: '/app/saveImage.php',
             cache: false,
             contentType: false,
             processData: false,
