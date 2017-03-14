@@ -3,7 +3,9 @@ class BoardControl extends CoreControl
 {
     private $_row;
     private $_table;    // attach와 연결에 쓸 자신이 테이블 이름
+
     private $_auth;
+    private $_authMap;
 
     private $_attach;
     private $_comment;
@@ -15,8 +17,10 @@ class BoardControl extends CoreControl
         $this->_row = 20;
         $this->_model->setRow($this->_row);
 
-        $this->_auth = $this->_model->getAuth();
         $this->_table = $this->_model->getTable();
+
+        $this->_auth = loadClass('AuthControl', 'auth');
+        $this->_authMap = $this->_auth->getAuthBy($this->_table);
 
         $this->_attach = loadClass('AttachControl', 'attach');
         $this->_attach->setUploadExtension();
@@ -34,7 +38,7 @@ class BoardControl extends CoreControl
 
     public function index()
     {
-        checkAuth($this->_auth['a_list']);
+         checkAuth($this->_authMap['auth_list']);
 
         $query = $this->urlQuery();
 
@@ -54,7 +58,7 @@ class BoardControl extends CoreControl
 
     public function view($code)
     {
-        checkAuth($this->_auth['a_view']);
+        checkAuth($this->_authMap['auth_view']);
 
         if (empty($code)) {
             popupMsg('요청이 잘못되었습니다.');
@@ -67,9 +71,9 @@ class BoardControl extends CoreControl
         $data['b_content'] = htmlspecialchars_decode($data['b_content']);
         $data['b_content'] = nl2br($data['b_content']);
 
-        $data['auth'] = $this->_auth;
-        $data['b_attach'] = $this->_attach->view($this->_table, $code);
+        $data['auth'] = $this->_authMap;
 
+        $data['b_attach'] = $this->_attach->view($this->_table, $code);
         $data['b_comment'] = $this->_comment->index($this->_table, $code);
 
         $this->_view->view($data);
@@ -89,7 +93,7 @@ class BoardControl extends CoreControl
 
     public function write()
     {
-        checkAuth($this->_auth['a_write']);
+        checkAuth($this->_authMap['auth_write']);
 
         if (empty($_POST)) {
             // var_dump($this->getBlank());
@@ -97,9 +101,9 @@ class BoardControl extends CoreControl
                 $this->getBlank());
             $data['b_parent'] = '';
 
-            $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_auth['f_attach_count']);
+            $data['auth'] = $this->_authMap;
 
-            $data['auth'] = $this->_auth;
+            $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_auth['f_attach_count']);
 
             $this->_view->write($data);
         } else {
@@ -127,7 +131,7 @@ class BoardControl extends CoreControl
 
     public function rewrite($code = '')
     {
-        checkAuth($this->_auth['a_reply']);
+        checkAuth($this->_authMap['auth_modify']);
 
         if (empty($_POST)) {
             $parent = $this->getBoard($code);
@@ -136,10 +140,11 @@ class BoardControl extends CoreControl
 
             $data['b_title'] = 'Re:'.$parent['b_title'];
             $data['b_parent'] = htmlspecialchars_decode($parent['b_content']);
+            $data['b_parent'] = nl2br($parent['b_content']);
 
-            $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_auth['f_attach_count']);
+            // $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_auth['f_attach_count']);
 
-            $data['auth'] = $this->_auth;
+            $data['auth'] = $this->_authMap;
 
             $this->_view->write($data);
         } else {
@@ -166,7 +171,6 @@ class BoardControl extends CoreControl
 
             $idx = $this->_model->insert();
 
-            $data = $this->getBoard($idx);
             $this->_attach->write($this->_table, $idx);
 
             $url = 'index.php'.$url;
@@ -176,11 +180,11 @@ class BoardControl extends CoreControl
 
     public function modify($code = '')
     {
-        checkAuth($this->_auth['a_modify']);
+        checkAuth($this->_authMap['auth_modify']);
 
         if (empty($_POST)) {
             // 접근 권한 확인후 적용
-            if (!isAdmin()) {
+            if (!$this->_auth->isAdmin()) {
                 if ($this->_model->isParent($code)) {
                     popupMsg('답변이 있는 글은 수정할 수 없습니다.');
                     exit;
@@ -192,14 +196,14 @@ class BoardControl extends CoreControl
             $data['b_parent'] = '';
             $data['b_content'] = htmlspecialchars_decode($data['b_content']);
 
-            $data['b_attach'] = $this->_attach->modify($this->_table, $code, $this->_auth['f_attach_count']);
+            $data['b_attach'] = $this->_attach->modify($this->_table, $code, $this->_authMap['auth_attach_count']);
 
-            $data['auth'] = $this->_auth;
+            $data['auth'] = $this->_authMap;
 
             $this->_view->modify($data);
         } else {
             // 접근 권한 확인후 적용
-            if (!isAdmin()) {
+            if (!$this->_auth->isAdmin()) {
                 if ($this->_model->isParent($_POST['idx'])) {
                     popupMsg('답변이 있는 글은 수정할 수 없습니다.');
                     exit;
@@ -223,8 +227,7 @@ class BoardControl extends CoreControl
 
             $this->_model->update();
 
-            $data = $this->getBoard($_POST['idx']);
-            $this->_attach->modify($this->_table, $_POST['idx'], $this->_auth['f_attach_count']);
+            $this->_attach->modify($this->_table, $_POST['idx'], $this->_authMap['auth_attach_count']);
 
             $url = 'index.php'.$url;
             header("Location: $url");
@@ -233,14 +236,14 @@ class BoardControl extends CoreControl
 
     public function remove()
     {
-        checkAuth($this->_auth['a_remove']);
+        checkAuth($this->_authMap['auth_remove']);
 
         if (empty($_POST)) {
             popupMsg('요청이 잘못되었습니다.');
             exit;
         } else {
             // 접근 권한 확인후 적용
-            if (!isAdmin()) {
+            if (!$this->_auth->isAdmin()) {
                 if ($this->_model->isParent($_POST['idx'])) {
                     popupMsg('답변이 있는 글은 삭제할 수 없습니다.');
                     exit;

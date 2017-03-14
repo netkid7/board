@@ -17,11 +17,6 @@ class BoardModel extends CoreModel
         return $this->_table;
     }
 
-    public function getAuth()
-    {
-        return $this->selectAuth($this->_table);
-    }
-
     public function setRow($row)
     {
         $this->_row_page = $row;
@@ -165,7 +160,7 @@ class BoardModel extends CoreModel
             }
             $order += 1;
 
-            // 들어가야할 위치보다 큰 순서 재정렬
+            // 답글 가운데 들어가야할 위치보다 큰 순서 재정렬
             $sql = "
                 UPDATE $this->_table
                 SET b_order = b_order + 1
@@ -174,7 +169,7 @@ class BoardModel extends CoreModel
             $stmt = $this->connection->prepare($sql);
             $stmt->execute(array(':b_ref' => $parent['b_ref'], ':b_order' => $order));
 
-
+            // 답글 위치 지정
             $depth = $parent['b_depth'] + 1;
             $sql = "
                 UPDATE $this->_table
@@ -217,10 +212,10 @@ class BoardModel extends CoreModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    private function nameHolder($i)
-    {
-        return ':b_'.$i;
-    }
+    // private function nameHolder($i)
+    // {
+    //     return ':b_'.$i;
+    // }
 
     public function updateCount($targetIdx)
     {

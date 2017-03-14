@@ -12,6 +12,11 @@ class AuthModel extends CoreModel
         $this->_row_page = 30;
     }
 
+    public function getTable()
+    {
+        return $this->_table;
+    }
+
     public function setRow($row)
     {
         $this->_row_page = $row;
@@ -143,8 +148,6 @@ class AuthModel extends CoreModel
         $stmt->execute();
 
         $c_idx = $this->connection->lastInsertId();
-
-        $this->updateRef($c_idx, $_POST['parent']);
 
         return $c_idx;
     }

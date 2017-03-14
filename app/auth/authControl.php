@@ -2,6 +2,10 @@
 class AuthControl extends CoreControl
 {
     private $_row;
+    private $_table;
+
+    private $_auth;
+    private $_authMap;
 
     public function __construct()
     {
@@ -9,6 +13,11 @@ class AuthControl extends CoreControl
 
         $this->_row = 20;
         $this->_model->setRow($this->_row);
+
+        $this->_table = $this->_model->getTable();
+        
+        $this->_auth = loadClass('AuthControl', 'auth');
+        $this->_authMap = $this->_auth->getAuthBy($this->_table);
     }
 
     /*
@@ -65,8 +74,12 @@ class AuthControl extends CoreControl
 
     public function index($parent, $parentIdx, $page = 1)
     {
+        checkAuth($this->_authMap['auth_list']);
+
         $data = $this->_model->selectAll($parent, $parentIdx, $page);
         $data['total_page'] = (int)ceil($data['total_count'] / $this->_row);
+        
+        $data['auth'] = $this->_authMap;
 
         $this->_view->index($data);
     }
@@ -78,14 +91,19 @@ class AuthControl extends CoreControl
 
     public function view($code)
     {
+        checkAuth($this->_authMap['auth_view']);
+
         if (empty($code)) {
             popupMsg('요청이 잘못되었습니다.');
             exit;
         }
 
         $data = $this->getAuth($code);
-        $data['c_content'] = htmlspecialchars_decode($data['c_content']);
-        $data['c_content'] = nl2br($data['c_content']);
+        // $data 값 특수문자 되돌리기
+        // single line - 특수문자 그래도 표현
+        // multiline
+        // $data['...'] = htmlspecialchars_decode($data['...'])
+        // $data['...'] = nl2br($data['...'])
 
         $this->_view->view($data);
     }
@@ -104,11 +122,13 @@ class AuthControl extends CoreControl
 
     public function write()
     {
+        checkAuth($this->_authMap['auth_write']);
+
         if (empty($_POST)) {
-            // var_dump($this->getBlank());
             $data = array_merge(array('hdnAction'=>'add', 'hdnParent'=>'', 'hdnIdx'=>''), 
                 $this->getBlank());
-            $data['c_parent'] = '';
+
+            $data['auth'] = $this->_authMap;
 
             $this->_view->write($data);
         } else {
@@ -119,14 +139,13 @@ class AuthControl extends CoreControl
             unset($_POST['idx']);
             unset($_POST['url']);
 
-            $_POST['title'] = strip_tags($_POST['title']);
-            $_POST['name'] = strip_tags($_POST['name']);
-            $_POST['email'] = strip_tags($_POST['email']);
-
-            $_POST['content'] = htmlspecialchars($_POST['content']);
+            // $_POST 값 특수문자 변경 
+            // input text : single line
+            // $_POST['...'] = htmlspecialchars(strip_tags($_POST['...']))
+            // textarea
+            // $_POST['...'] = htmlspecialchars($_POST['...'])
 
             $idx = $this->_model->insert();
-
 
             $url = 'index.php'.$url;
             header("Location: $url");
@@ -135,9 +154,11 @@ class AuthControl extends CoreControl
 
     public function modify($code = '')
     {
+        checkAuth($this->_authMap['auth_modify']);
+
         if (empty($_POST)) {
             // 접근 권한 확인후 적용
-            if (!isAdmin()) {
+            if (!$this->_auth->isAdmin()) {
                 if ($this->_model->isParent($code)) {
                     popupMsg('답변이 있는 글은 수정할 수 없습니다.');
                     exit;
@@ -146,13 +167,13 @@ class AuthControl extends CoreControl
 
             $data = array_merge(array('hdnAction'=>'mod', 'hdnParent'=>'', 'hdnIdx'=>$code), 
                 $this->getAuth($code));
-            $data['b_parent'] = '';
-            $data['b_content'] = htmlspecialchars_decode($data['b_content']);
+            
+            $data['auth'] = $this->_authMap;
 
             $this->_view->modify($data);
         } else {
             // 접근 권한 확인후 적용
-            if (!isAdmin()) {
+            if (!$this->_auth->isAdmin()) {
                 if ($this->_model->isParent($_POST['idx'])) {
                     popupMsg('답변이 있는 글은 수정할 수 없습니다.');
                     exit;
@@ -168,11 +189,11 @@ class AuthControl extends CoreControl
             unset($_POST['url']);
             unset($_POST['step']);
 
-            $_POST['title'] = strip_tags($_POST['title']);
-            $_POST['name'] = strip_tags($_POST['name']);
-            $_POST['email'] = strip_tags($_POST['email']);
-
-            $_POST['content'] = htmlspecialchars($_POST['content']);
+            // $_POST 값 특수문자 변경 
+            // input text : single line
+            // $_POST['...'] = htmlspecialchars(strip_tags($_POST['...']))
+            // textarea
+            // $_POST['...'] = htmlspecialchars($_POST['...'])
 
             $this->_model->update();
 
@@ -185,18 +206,20 @@ class AuthControl extends CoreControl
 
     public function remove()
     {
+        checkAuth($this->_authMap['auth_remove']);
+
         if (empty($_POST)) {
             popupMsg('요청이 잘못되었습니다.');
             exit;
         } else {
             // 접근 권한 확인후 적용
-            if (!isAdmin()) {
+            if (!$this->_auth->isAdmin()) {
                 if ($this->_model->isParent($_POST['idx'])) {
                     popupMsg('답변이 있는 글은 삭제할 수 없습니다.');
                     exit;
                 }
             }
-            
+
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
 
             $this->_model->delete();
