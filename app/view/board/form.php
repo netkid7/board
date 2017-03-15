@@ -21,10 +21,10 @@ if (empty($b_name)) {
 
                             <div class="form-group">
                                 <label class="col-md-2 control-label">이름</label>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <input type="text" name="name" id="name" class="form-control" value="<?=$b_name?>" required maxlength="100" />
                                 </div>
-                                <label class="col-md-2 control-label">email</label>
+                                <label class="col-md-1 control-label">email</label>
                                 <div class="col-md-3">
                                     <input type="text" name="email" id="email" class="form-control" value="<?=$b_email?>" maxlength="50" />
                                 </div>

@@ -8,7 +8,7 @@ class AuthModel extends CoreModel
     {
         parent::__construct();
 
-        $this->_table = 'coo_auth';
+        $this->_table = 'brn_auth';
         $this->_row_page = 30;
     }
 

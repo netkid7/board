@@ -4,7 +4,6 @@ class AuthControl extends CoreControl
     private $_row;
     private $_table;
 
-    private $_auth;
     private $_authMap;
 
     public function __construct()
@@ -16,8 +15,7 @@ class AuthControl extends CoreControl
 
         $this->_table = $this->_model->getTable();
         
-        $this->_auth = loadClass('AuthControl', 'auth');
-        $this->_authMap = $this->_auth->getAuthBy($this->_table);
+        $this->_authMap = $this->getAuthBy($this->_table);
     }
 
     /*
@@ -157,14 +155,6 @@ class AuthControl extends CoreControl
         checkAuth($this->_authMap['auth_modify']);
 
         if (empty($_POST)) {
-            // 접근 권한 확인후 적용
-            if (!$this->_auth->isAdmin()) {
-                if ($this->_model->isParent($code)) {
-                    popupMsg('답변이 있는 글은 수정할 수 없습니다.');
-                    exit;
-                }
-            }
-
             $data = array_merge(array('hdnAction'=>'mod', 'hdnParent'=>'', 'hdnIdx'=>$code), 
                 $this->getAuth($code));
             
@@ -172,14 +162,6 @@ class AuthControl extends CoreControl
 
             $this->_view->modify($data);
         } else {
-            // 접근 권한 확인후 적용
-            if (!$this->_auth->isAdmin()) {
-                if ($this->_model->isParent($_POST['idx'])) {
-                    popupMsg('답변이 있는 글은 수정할 수 없습니다.');
-                    exit;
-                }
-            }
-
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
             $step = $_POST['step'];
 
@@ -212,14 +194,6 @@ class AuthControl extends CoreControl
             popupMsg('요청이 잘못되었습니다.');
             exit;
         } else {
-            // 접근 권한 확인후 적용
-            if (!$this->_auth->isAdmin()) {
-                if ($this->_model->isParent($_POST['idx'])) {
-                    popupMsg('답변이 있는 글은 삭제할 수 없습니다.');
-                    exit;
-                }
-            }
-
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
 
             $this->_model->delete();
