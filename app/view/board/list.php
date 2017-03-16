@@ -29,7 +29,7 @@ if (empty($get_s)) {
                                         <span class="input-group-btn">
                                             <button type="submit" class="btn btn-primary" tabindex="3"> <i class="fa fa-search"></i> 검색</button>
                                             <a class="btn btn-default" href="<?=$_SERVER['PHP_SELF']?>"> 리스트</a>
-                                            <?=getAuthButton($auth['a_write'],
+                                            <?=getAuthButton($auth['auth_write'],
                                                 '<a href="'.$_SERVER['PHP_SELF'].'?enter=w&'.getQuery('enter','idx').'" class="btn btn-info"> <i class="fa fa-plus"></i> 추가</a>')?>
 
                                         </span>

@@ -40,18 +40,15 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="2"><?php
-                                    if (($b_password == $_SESSION['_id']) || isAdmin()) { ?>
-
-                                        <?=getAuthButton($auth['a_remove'],
+                                        <td colspan="2">
+                                        <?=getAuthButton($auth['auth_remove'],
                                             '<a href="'.$_SERVER['PHP_SELF'].'" class="btn btn-warning" data-method="delete" data-idx="'.$b_idx.'" data-url="'.getQuery('enter,idx').'" data-confirm="삭제하시겠습니까?">삭제</a>')?>
-                                        <?=getAuthButton($auth['a_modify'],
-                                            '<a href="'.$_SERVER['PHP_SELF'].'?enter=m&idx='.$b_idx.'&'.getQuery('enter,idx').'" class="btn btn-info">수정</a>')?><?php
-                                    } ?>
+                                        <?=getAuthButton($auth['auth_modify'],
+                                            '<a href="'.$_SERVER['PHP_SELF'].'?enter=m&idx='.$b_idx.'&'.getQuery('enter,idx').'" class="btn btn-info">수정</a>')?>
 
                                         </td>
                                         <td colspan="2" class="text-right">
-                                        <?=getAuthButton($auth['a_reply'],
+                                        <?=getAuthButton($auth['auth_reply'],
                                             '<a href="'.$_SERVER['PHP_SELF'].'?enter=r&idx='.$b_idx.'&'.getQuery('enter,idx').'" class="btn btn-success">답변</a>')?>
 
                                             <a href="<?=$_SERVER['PHP_SELF']?>?<?=getQuery('enter,idx')?>" class="btn btn-default">목록으로</a>
