@@ -44,7 +44,7 @@ class BoardControl extends CoreControl
 
         $data = $this->_model->selectAll($query['get_page']);
         $data['total_page'] = (int)ceil($data['total_count'] / $this->_row);
-        $data['auth'] = $this->_auth;
+        $data['auth'] = $this->_authMap;
 
         $data = array_merge($data, $query);
 
