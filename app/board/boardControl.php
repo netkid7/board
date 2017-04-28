@@ -14,7 +14,7 @@ class BoardControl extends CoreControl
     {
         parent::__construct('board');
 
-        $this->_row = 10;
+        $this->_row = 20;
         $this->_model->setRow($this->_row);
 
         $this->_table = $this->_model->getTable();
