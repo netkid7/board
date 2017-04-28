@@ -2,7 +2,7 @@
 include_once implode(DIRECTORY_SEPARATOR, array(dirname(__FILE__), '..', 'app', 'core', 'config.php'));
 
 $board = loadClass('BoardControl', 'board');
-$board->setMasterPage('app/view/master.html');
+// $board->setMasterPage('app/view/master.html');
 
 if (!empty($_POST['action'])) {
     switch ($_POST['action']) {
@@ -13,7 +13,7 @@ if (!empty($_POST['action'])) {
             $board->modify();
             break;
         case 'rep':
-            $board->rewrite();
+            $board->reply();
             break;
         case 'del':
             $board->remove();
@@ -33,7 +33,7 @@ if (!empty($_POST['action'])) {
             $board->modify($_GET['idx']);
             break;
         case 'r':
-            $board->rewrite($_GET['idx']);
+            $board->reply($_GET['idx']);
             break;
         default:
             $board->index();

@@ -11,8 +11,8 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-/* root 계정으로 DB: btnTools 를 만들고 사용자를 등록한다. */
-Grant all privileges on brnTools.* to brntools@'%' identified by 'brntools#0701'
+/* root 계정으로 DB: nx_tools 를 만들고 사용자를 등록한다. */
+Grant all privileges on nx_tools.* to developer@'%' identified by 'roqkfwk@9'
 
 -- 테이블 brighten.brn_attach 구조 내보내기
 CREATE TABLE IF NOT EXISTS `brn_attach` (

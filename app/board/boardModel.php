@@ -31,7 +31,7 @@ class BoardModel extends CoreModel
         if (!empty($_GET['k']) && array_key_exists($_GET["s"], $arr_search)) {
             $column = $arr_search[$_GET["s"]];
             $search[] = "$column LIKE :{$column}";
-            $param[":{$column}"] = "%".noInject($_GET['k'])."%";
+            $param[":{$column}"] = "%".$_GET['k']."%";
         }
 
         $result = array();

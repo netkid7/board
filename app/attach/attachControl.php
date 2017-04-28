@@ -61,9 +61,15 @@ class AttachControl extends CoreControl
     public function write($parent, $parentIdx, $maxCount = 0)
     {
         if (empty($_POST)) {
-            $data = array(
-                'rows'=>array_fill(0, $maxCount, $this->getBlank())
-            );
+            if ($maxCount <= 0) {
+                $data = array(
+                    'rows' => array()
+                );
+            } else {
+                $data = array(
+                    'rows' => array_fill(0, $maxCount, $this->getBlank())
+                );
+            }
 
             return $this->_view->write($data);
         } else {

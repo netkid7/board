@@ -14,7 +14,7 @@ class BoardControl extends CoreControl
     {
         parent::__construct('board');
 
-        $this->_row = 20;
+        $this->_row = 10;
         $this->_model->setRow($this->_row);
 
         $this->_table = $this->_model->getTable();
@@ -29,16 +29,20 @@ class BoardControl extends CoreControl
 
     private function urlQuery()
     {
-        $get_page = (empty($_GET["page"]))? 1: noInject($_GET["page"]);
-        $get_s = (empty($_GET["s"]))? '': noInject($_GET["s"]);
-        $get_k = (empty($_GET["k"]))? '': noInject($_GET["k"]);
+        $_GET['page'] = (empty($_GET["page"]))? 1: getPositiveInt($_GET['page']);
+        $_GET['s'] = (empty($_GET["s"]))? '': getPositiveInt($_GET["s"]);
+        $_GET['k'] = (empty($_GET["k"]))? '': htmlspecialchars($_GET["k"], ENT_QUOTES);
+
+        $get_page = $_GET["page"];
+        $get_s = $_GET["s"];
+        $get_k = $_GET["k"];
 
         return compact('get_page', 'get_s', 'get_k');
     }
 
     public function index()
     {
-         checkAuth($this->_authMap['auth_list']);
+        checkAuth($this->_authMap['auth_list']);
 
         $query = $this->urlQuery();
 
@@ -103,7 +107,11 @@ class BoardControl extends CoreControl
 
             $data['auth'] = $this->_authMap;
 
-            $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_auth['f_attach_count']);
+            if ($this->_authMap['auth_attach']) {
+                $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_authMap['auth_attach_count']);
+            } else {
+                $data['b_attach'] = '';
+            }
 
             $this->_view->write($data);
         } else {
@@ -114,11 +122,11 @@ class BoardControl extends CoreControl
             unset($_POST['idx']);
             unset($_POST['url']);
 
-            $_POST['title'] = htmlspecialchars(strip_tags($_POST['title']));
-            $_POST['name'] = htmlspecialchars(strip_tags($_POST['name']));
-            $_POST['email'] = htmlspecialchars(strip_tags($_POST['email']));
+            $_POST['title'] = htmlspecialchars($_POST['title'], ENT_QUOTES);
+            $_POST['name'] = htmlspecialchars($_POST['name'], ENT_QUOTES);
+            $_POST['email'] = htmlspecialchars($_POST['email'], ENT_QUOTES);
 
-            $_POST['content'] = htmlspecialchars($_POST['content']);
+            $_POST['content'] = htmlspecialchars($_POST['content'], ENT_QUOTES);
 
             $idx = $this->_model->insert();
 
@@ -129,7 +137,7 @@ class BoardControl extends CoreControl
         }
     }
 
-    public function rewrite($code = '')
+    public function reply($code = '')
     {
         checkAuth($this->_authMap['auth_modify']);
 
@@ -139,12 +147,15 @@ class BoardControl extends CoreControl
                 $this->getBlank());
 
             $data['b_title'] = 'Re:'.$parent['b_title'];
-            $data['b_parent'] = htmlspecialchars_decode($parent['b_content']);
-            $data['b_parent'] = nl2br($parent['b_content']);
-
-            // $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_auth['f_attach_count']);
+            $data['b_parent'] = htmlspecialchars_decode(nl2br($parent['b_content']), ENT_QUOTES);
 
             $data['auth'] = $this->_authMap;
+
+            if ($this->_authMap['auth_attach']) {
+                $data['b_attach'] = $this->_attach->write($this->_table, '', $this->_authMap['auth_attach_count']);
+            } else {
+                $data['b_attach'] = '';
+            }
 
             $this->_view->write($data);
         } else {
@@ -158,16 +169,16 @@ class BoardControl extends CoreControl
             unset($_POST['step']);
 
 
-            $_POST['title'] = htmlspecialchars(strip_tags($_POST['title']));
-            $_POST['name'] = htmlspecialchars(strip_tags($_POST['name']));
-            $_POST['email'] = htmlspecialchars(strip_tags($_POST['email']));
+            $_POST['title'] = htmlspecialchars($_POST['title'], ENT_QUOTES);
+            $_POST['name'] = htmlspecialchars($_POST['name'], ENT_QUOTES);
+            $_POST['email'] = htmlspecialchars($_POST['email'], ENT_QUOTES);
 
             // 답글앞에 원본글 내용 추가
             $parent = $this->getBoard($_POST['parent']);
             $parentContent = '<ul class="reply"><li>'.htmlspecialchars_decode($parent['b_content']).'</li></ul>';
             $_POST['content'] = $parentContent.$_POST['content'];
 
-            $_POST['content'] = htmlspecialchars($_POST['content']);
+            $_POST['content'] = htmlspecialchars($_POST['content'], ENT_QUOTES);
 
             $idx = $this->_model->insert();
 
@@ -219,11 +230,11 @@ class BoardControl extends CoreControl
             unset($_POST['url']);
             unset($_POST['step']);
 
-            $_POST['title'] = htmlspecialchars(strip_tags($_POST['title']));
-            $_POST['name'] = htmlspecialchars(strip_tags($_POST['name']));
-            $_POST['email'] = htmlspecialchars(strip_tags($_POST['email']));
+            $_POST['title'] = htmlspecialchars($_POST['title'], ENT_QUOTES);
+            $_POST['name'] = htmlspecialchars($_POST['name'], ENT_QUOTES);
+            $_POST['email'] = htmlspecialchars($_POST['email'], ENT_QUOTES);
 
-            $_POST['content'] = htmlspecialchars($_POST['content']);
+            $_POST['content'] = htmlspecialchars($_POST['content'], ENT_QUOTES);
 
             $this->_model->update();
 

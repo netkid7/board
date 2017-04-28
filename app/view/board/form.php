@@ -31,7 +31,7 @@ if (empty($b_name)) {
                             </div>
                             <div class="form-group">
                                 <div class="col-md-2"></div><?php
-                            if (hasAuth($auth['a_secret']) && ($auth['f_secret'] == 'y')) { ?>
+                            if ($auth['auth_secret']) { ?>
 
                                 <div class="col-md-2">
                                     <label class="checkbox-inline">
@@ -40,7 +40,7 @@ if (empty($b_name)) {
                                 </div><?php
                             } 
 
-                            if (hasAuth($auth['a_notice']) && ($auth['f_notice'] == 'y')) { ?>
+                            if ($auth['auth_notice']) { ?>
 
                                 <div class="col-md-2">
                                     <label class="checkbox-inline">
@@ -63,11 +63,15 @@ if (empty($b_name)) {
                                     <textarea name="content" id="summercontent" style="display: none;"></textarea>
                                     <div id="summernote"><?=$b_content?></div>
                                 </div>
-                            </div>
+                            </div><?php
+                            if ($b_attach) { ?>
+
                             <div class="form-group">
                                 <label class="col-md-2 control-label">첨부</label>
                                 <div class="col-md-6"><?=$b_attach?></div>
-                            </div>
+                            </div><?php
+                            } ?>
+                            
                             <hr />
                             <div class="form-group">
                                 <div class="col-md-3 col-md-offset-4">

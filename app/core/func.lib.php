@@ -37,6 +37,16 @@ function noInject($value, $option = true)
     return $result;
 }
 
+function getPositiveInt($val)
+{
+    $data = filter_var($val, FILTER_VALIDATE_INT);
+    if ($data !== false) {
+        return ($data > 0)? $data: 1;
+    } else {
+        return 1;
+    }
+}
+
 /*
  * 내용 페이지를 보여준다.
  * @param string 내용 페이지 파일이름
