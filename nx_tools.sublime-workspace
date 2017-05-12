@@ -864,6 +864,7 @@
 	],
 	"file_history":
 	[
+		"/D/work_nexi/nx_tools/.gitignore",
 		"/D/work_nexi/nx_tools/test/inherit.php",
 		"/D/work_nexi/nx_tools/app/core/func.lib.php",
 		"/D/work_nexi/nx_tools/app/core/func.auth.php",
@@ -990,8 +991,7 @@
 		"/D/wiz_studio/lily/studio/member/memberModel.php",
 		"/D/wiz_studio/lily/test/tcpdf.php",
 		"/D/work_brighten/gscctv/app/view/cctv/form.php",
-		"/D/work_brighten/gscctv/app/cctv/cctvView.php",
-		"/D/work_nexi/nx_tools/app/comment/commentControl.php"
+		"/D/work_brighten/gscctv/app/cctv/cctvView.php"
 	],
 	"find":
 	{
