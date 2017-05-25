@@ -64,13 +64,13 @@ if (empty($b_name)) {
                                     <div id="summernote"><?=$b_content?></div>
                                 </div>
                             </div><?php
-                            if ($b_attach) { ?>
+                        if ($b_attach) { ?>
 
                             <div class="form-group">
                                 <label class="col-md-2 control-label">첨부</label>
                                 <div class="col-md-6"><?=$b_attach?></div>
                             </div><?php
-                            } ?>
+                        } ?>
                             
                             <hr />
                             <div class="form-group">

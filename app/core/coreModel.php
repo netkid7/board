@@ -16,4 +16,17 @@ class CoreModel // extends PDO
         }
         $this->connection = self::$databases[$connDetails];
     }
+
+    public function selectAuth($tableName)
+    {
+        $sql = "
+            SELECT *
+            FROM brn_auth
+            WHERE a_table = :table";
+        $stmt = $this->connection->prepare($sql);
+        $stmt->bindParam(':table', $tableName, PDO::PARAM_STR);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

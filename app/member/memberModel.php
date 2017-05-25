@@ -8,7 +8,7 @@ class MemberModel extends CoreModel
     {
         parent::__construct();
 
-        $this->_table = 'coo_member';
+        $this->_table = 'brn_member';
         $this->_row_page = 30;
     }
 
