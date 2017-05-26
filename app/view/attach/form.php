@@ -6,8 +6,8 @@ foreach ($rows as $key => $val) {
         $strAttach = '';
     } ?>
 
-        <span class="help-block">
-            <input type="file" name="attach[]" id="attach<?=($key + 1)?>" />
-            <?=$strAttach?>
-        </span><?php
-    }
+    <span class="help-block">
+        <input type="file" name="attach[]" id="attach<?=($key + 1)?>" />
+        <?=$strAttach?></span><?php
+} ?>
+

@@ -68,7 +68,9 @@ if (empty($b_name)) {
 
                             <div class="form-group">
                                 <label class="col-md-2 control-label">첨부</label>
-                                <div class="col-md-6"><?=$b_attach?></div>
+                                <div class="col-md-6">
+                                    <?=$b_attach?>
+                                </div>
                             </div><?php
                         } ?>
                             
