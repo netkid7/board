@@ -27,19 +27,6 @@ class BoardControl extends CoreControl
         $this->_comment = loadClass('CommentControl', 'comment');
     }
 
-    private function urlQuery()
-    {
-        $_GET['page'] = (empty($_GET["page"]))? 1: getPositiveInt($_GET['page']);
-        $_GET['s'] = (empty($_GET["s"]))? '': getPositiveInt($_GET["s"]);
-        $_GET['k'] = (empty($_GET["k"]))? '': htmlspecialchars($_GET["k"], ENT_QUOTES);
-
-        $get_page = $_GET["page"];
-        $get_s = $_GET["s"];
-        $get_k = $_GET["k"];
-
-        return compact('get_page', 'get_s', 'get_k');
-    }
-
     public function index()
     {
         checkAuth($this->_authMap['auth_list']);
@@ -100,7 +87,6 @@ class BoardControl extends CoreControl
         checkAuth($this->_authMap['auth_write']);
 
         if (empty($_POST)) {
-            // var_dump($this->getBlank());
             $data = array_merge(array('hdnAction'=>'add', 'hdnParent'=>'', 'hdnIdx'=>''), 
                 $this->getBlank());
             $data['b_parent'] = '';
@@ -219,7 +205,10 @@ class BoardControl extends CoreControl
                     popupMsg('답변이 있는 글은 수정할 수 없습니다.');
                     exit;
                 }
+                
+                // 패스워드확인 by $_SESSION 로그인 정보
             }
+
 
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
             $step = $_POST['step'];
@@ -259,6 +248,8 @@ class BoardControl extends CoreControl
                     popupMsg('답변이 있는 글은 삭제할 수 없습니다.');
                     exit;
                 }
+
+                // 패스워드확인 by $_SESSION 로그인 정보
             }
             
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];

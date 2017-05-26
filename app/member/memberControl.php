@@ -9,6 +9,7 @@ class MemberControl extends CoreControl
 
     private $_auth;
     private $_authMap;
+
     private $_attach;
 
     public function __construct()
@@ -17,126 +18,22 @@ class MemberControl extends CoreControl
 
         $this->_row = 20;
         $this->_model->setRow($this->_row);
+
         $this->_table = $this->_model->getTable();
 
         $this->_level = array(
             99 => '최고관리자',
             9 => '관리자',
             2 => '직원',
-            1 => '일반회원',
+            1 => '일반회원'
         );
         $this->_idPattern = '/^[a-zA-Z][0-9a-zA-Z_]{5,19}$/';
 
         $this->_auth = loadClass('AuthControl', 'auth');
         $this->_authMap = $this->_auth->getAuthBy($this->_table);
+
         $this->_attach = loadClass('AttachControl', 'attach');
         $this->_attach->setUploadExtension();
-    }
-
-    private function appResponse($data)
-    {
-        $result = array(
-            'id' => '',
-            'gcm' => '',
-            'name' => '',
-            'type' => '',
-            'mail' => '',
-            'image' => '',
-            'msg' => ''
-            );
-
-        if (!is_array($data)) {
-            $data = array(
-                'id' => 'undefined',
-                'gcm' => 'undefined',
-                'msg' => $data);
-        }
-        foreach ($result as $key => &$val) {
-            if (array_key_exists($key, $data)) {
-                $val = $data[$key];
-            }
-        }
-
-        return $result;
-    }
-
-    // 앱에서 동영상이나 댓글에 사용할 키로서 사용자/회원정보
-    public function appMemberIdx()
-    {
-        if (empty($_POST)) {
-            return false;
-        }
-
-        $data = $this->_model->selectByID($_POST['ID']);
-        if ($data) {
-            return $data['m_idx'];
-        } else {
-            return false;
-        }
-    }
-
-    // 앱을 실행하면 우선 요청하며, 사용자/회원 정보를 제공한다.
-    public function appInit()
-    {
-        if (empty($_POST)) {
-            responseError($this->appResponse('no data'));
-        }
-
-        $result = $this->_model->appSelect();
-
-        if ($result) {
-            responseOK($this->appResponse($result));
-        } else {
-            responseError($this->appResponse('fail to search'));
-        }
-    }
-
-    // 앱에서 회원 등록할 때 호출한다.
-    public function appRegist()
-    {
-        if (empty($_POST)) {
-            responseError($this->appResponse('no data'));
-        }
-
-        $result = $this->_model->appInsert();
-
-        if ($result) {
-            responseOK($this->appResponse($result));
-        } else {
-            responseError($this->appResponse('fail to regist'));
-        }
-    }
-
-    // 앱에서 회원 정보를 수정할 때 호출한다.
-    public function appModify()
-    {
-        if (empty($_POST)) {
-            responseError($this->appResponse('no data'));
-        }
-
-        $result = $this->_model->appUpdate();
-
-        if ($result) {
-            responseOK($this->appResponse($result));
-        } else {
-            responseError($this->appResponse('fail to modify'));
-        }
-    }
-
-    // 앱에서 회원 탈퇴할 때 호출한다.
-    public function appLeave()
-    {
-        if (empty($_POST)) {
-            responseError($this->appResponse('no data'));
-        }
-
-        $result = $this->_model->appDelete();
-
-        if ($result) {
-            responseOK($this->appResponse($result));
-        } else {
-            responseError($this->appResponse('fail to leave'));
-        }
     }
 
     public function getLevel()
@@ -314,15 +211,6 @@ class MemberControl extends CoreControl
         }
     }
 
-    private function urlQuery()
-    {
-        $get_page = (empty($_GET["page"]))? 1: noInject($_GET["page"]);
-        $get_s = (empty($_GET["s"]))? '': noInject($_GET["s"]);
-        $get_k = (empty($_GET["k"]))? '': noInject($_GET["k"]);
-
-        return compact('get_page', 'get_s', 'get_k');
-    }
-
     public function index()
     {
         checkAuth($this->_authMap['auth_list']);
@@ -393,11 +281,12 @@ class MemberControl extends CoreControl
         checkAuth($this->_authMap['auth_write']);
 
         if (empty($_POST)) {
-            // $this->getBlank();
             $data = array_merge(array('hdnAction'=>'add', 'hdnIdx'=>'', 'hdnDupl'=>'0'), 
                 $this->getBlank());
             $data['level'] = $this->getBelowLevel();
             $data['id_pattern'] = $this->_idPattern;
+
+            $data['auth'] = $this->_authMap;
 
             $this->_view->write($data);
         } else {
@@ -405,6 +294,9 @@ class MemberControl extends CoreControl
                 popupMsg('아이디 중복 여부를 확인해주세요.');
                 exit;
             }
+
+            // ID pattern 체크
+            // 이름, 이메일, 연락처, 메모 특수문자 확인
 
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
 

@@ -16,11 +16,9 @@ if ($m_image) {
                                 <tbody>
                                     <tr>
                                         <th>아이디</th>
-                                        <td colspan="3"><?=$m_id?></td>
-                                    </tr>
-                                    <tr>
-                                        <th>FCM</th>
-                                        <td colspan="3"><?=$m_gcm?></td>
+                                        <td><?=$m_id?></td>
+                                        <th>타입</th>
+                                        <td><?=$m_type?></td>
                                     </tr>
                                     <tr>
                                         <th class="col-md-2">이름</th>
@@ -29,15 +27,13 @@ if ($m_image) {
                                         <td class="col-md-3"><?=$m_level?></td>
                                     </tr>
                                     <tr>
-                                        <th>타입</th>
-                                        <td><?=$m_type?></td>
                                         <th>상태</th>
                                         <td><?=$m_state?></td>
+                                        <td colspan="2" rowspan="5"><?=$profile?></td>
                                     </tr>
                                     <tr>
                                         <th>이메일</th>
                                         <td><?=$m_email?></td>
-                                        <td colspan="2" rowspan="4"><?=$profile?></td>
                                     </tr>
                                     <tr>
                                         <th>최근 로그인</th>
