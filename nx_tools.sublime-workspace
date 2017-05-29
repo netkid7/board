@@ -520,19 +520,19 @@
 	"buffers":
 	[
 		{
-			"file": "member/index.php",
+			"file": "app/core/coreControl.php",
 			"settings":
 			{
-				"buffer_size": 1551,
+				"buffer_size": 919,
+				"encoding": "UTF-8",
 				"line_ending": "Windows"
 			}
 		},
 		{
-			"file": "app/core/config.php",
+			"file": "app/core/coreModel.php",
 			"settings":
 			{
-				"buffer_size": 1065,
-				"encoding": "UTF-8",
+				"buffer_size": 700,
 				"line_ending": "Windows"
 			}
 		},
@@ -546,31 +546,30 @@
 			}
 		},
 		{
-			"contents": "Searching 171 files for \"hasAuth\" (case sensitive)\n\nD:\\work_nexi\\nx_tools\\app\\auth\\authControl.php:\n   29      private function hasAble($func, $level)\n   30      {\n   31:         return (($func == 'y') && $this->hasAuth($level));\n   32      }\n   33  \n   ..\n   37       * return bool 권한이 있으면(레벨 <= 세션) TRUE;\n   38       */\n   39:     private function hasAuth($level)\n   40      {\n   41          return (isset($_SESSION['_level']) && ($_SESSION['_level']) >= $level);\n   ..\n   47  \n   48          $result = array(\n   49:             'auth_list' => $this->hasAuth($data['a_list']),\n   50:             'auth_view' => $this->hasAuth($data['a_view']),\n   51:             'auth_write' => $this->hasAuth($data['a_write']),\n   52:             'auth_download' => $this->hasAuth($data['a_download']),\n   53:             'auth_modify' => $this->hasAuth($data['a_modify']),\n   54:             'auth_remove' => $this->hasAuth($data['a_remove']),\n   55              'auth_reply' => $this->hasAble($data['f_reply'], $data['a_reply']),\n   56              'auth_comment' => $this->hasAble($data['f_comment'], $data['a_comment']),\n   ..\n   58              'auth_notice' => $this->hasAble($data['f_notice'], $data['a_notice']),\n   59              'auth_secret' => $this->hasAble($data['f_secret'], $data['a_secret']),\n   60:             'auth_attach' => ($this->hasAuth($data['a_attach']) && ($data['f_attach_count'] > 0)),\n   61              'auth_attach_count' => $data['f_attach_count'],\n   62              'auth_attach_type' => $data['f_attach_type']\n   ..\n   68      public function isAdmin()\n   69      {\n   70:         return $this->hasAuth(9);\n   71      }\n   72  \n\nD:\\work_nexi\\nx_tools\\app\\auth\\authSession.php:\n   20      private static function hasAble($func, $level)\n   21      {\n   22:         return (($func == 'y') && self::hasAuth($level));\n   23      }\n   24  \n   25:     private static function hasAuth($level)\n   26      {\n   27          return (isset($_SESSION['_level']) && ($_SESSION['_level']) >= $level);\n   ..\n   30      public static function isAdmin()\n   31      {\n   32:         return self::hasAuth(9);\n   33      }\n   34  }\n\nD:\\work_nexi\\nx_tools\\app\\core\\func.auth.php:\n   10  function hasAble($func, $level)\n   11  {\n   12:     return (($func == 'y') && hasAuth($level));\n   13  }\n   14  \n   ..\n   21  function checkAuth($minLevel)\n   22  {\n   23:     if (empty($_SESSION['_level']) || !hasAuth($minLevel)) {\n   24          popupMsg('접근 권한이 없습니다.');\n   25          exit();\n   ..\n   32   * return bool 권한이 있으면(레벨 <= 세션) TRUE;\n   33   */\n   34: function hasAuth($level)\n   35  {\n   36      return (isset($_SESSION['_level']) && ($level <= $_SESSION['_level']));\n   ..\n   39  function getAuthButton($level, $strButton)\n   40  {\n   41:     return (hasAuth($level))? $strButton: '';\n   42  }\n   43  \n   ..\n   45  {\n   46      // return (isset($_SESSION['_level']) && (9 <= $_SESSION['_level']));\n   47:     return hasAuth(9);\n   48  }\n   49  \n\nD:\\work_nexi\\nx_tools\\app\\core\\func.lib.php:\n   77  function hasAble($func, $level)\n   78  {\n   79:     return (($func == 'y') && hasAuth($level));\n   80  }\n   81  \n   ..\n   88  function checkAuth($minLevel)\n   89  {\n   90:     if (empty($_SESSION['_level']) || !hasAuth($minLevel)) {\n   91          popupMsg('접근 권한이 없습니다.');\n   92          exit();\n   ..\n   99   * return bool 권한이 있으면(레벨 <= 세션) TRUE;\n  100   */\n  101: function hasAuth($level)\n  102  {\n  103      return (isset($_SESSION['_level']) && ($level <= $_SESSION['_level']));\n  ...\n  106  function getAuthButton($level, $strButton)\n  107  {\n  108:     return (hasAuth($level))? $strButton: '';\n  109  }\n  110  \n  ...\n  112  {\n  113      // return (isset($_SESSION['_level']) && (9 <= $_SESSION['_level']));\n  114:     return hasAuth(9);\n  115  }\n  116  \n\nD:\\work_nexi\\nx_tools\\app\\view\\board\\list.php:\n   73                                      }\n   74  \n   75:                                     if (hasAuth($auth['auth_view'])) {\n   76                                          $title = $indent .'<a href=\"'. $_SERVER['PHP_SELF'] .'?enter=v&idx='. $idx .'&'. getQuery() .'\">'.$title .'</a>';\n   77                                      }\n\n24 matches across 5 files\n",
+			"file": "app/attach/attachControl.php",
 			"settings":
 			{
-				"buffer_size": 4178,
-				"line_ending": "Windows",
-				"name": "Find Results",
-				"scratch": true
-			}
-		},
-		{
-			"file": "app/view/board/form.php",
-			"settings":
-			{
-				"buffer_size": 5474,
-				"encoding": "UTF-8",
-				"line_ending": "Windows"
-			}
-		},
-		{
-			"file": "app/board/boardView.php",
-			"settings":
-			{
-				"buffer_size": 1551,
+				"buffer_size": 2988,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/attach/attachView.php",
+			"settings":
+			{
+				"buffer_size": 1169,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "app/view/attach/view.php",
+			"settings":
+			{
+				"buffer_size": 960,
+				"encoding": "UTF-8",
+				"line_ending": "Windows"
 			}
 		},
 		{
@@ -582,48 +581,30 @@
 			}
 		},
 		{
-			"file": "app/member/memberControl.php",
-			"settings":
-			{
-				"buffer_size": 12722,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/auth/authSession.php",
-			"settings":
-			{
-				"buffer_size": 808,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
 			"file": "app/board/boardControl.php",
 			"settings":
 			{
-				"buffer_size": 8380,
+				"buffer_size": 8009,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "app/member/memberModel.php",
+			"file": "app/view/board/form.php",
 			"settings":
 			{
-				"buffer_size": 16576,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "app/core/coreModel.php",
-			"settings":
-			{
-				"buffer_size": 1045,
+				"buffer_size": 5544,
 				"encoding": "UTF-8",
 				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "app/board/boardModel.php",
+			"settings":
+			{
+				"buffer_size": 9107,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
 			}
 		}
 	],
@@ -761,6 +742,7 @@
 		"/D/work_nexi/nx_tools/app/view/attach",
 		"/D/work_nexi/nx_tools/app/view/board",
 		"/D/work_nexi/nx_tools/app/view/comment",
+		"/D/work_nexi/nx_tools/app/view/member",
 		"/D/work_nexi/nx_tools/board",
 		"/D/work_nexi/nx_tools/js",
 		"/D/work_nexi/nx_tools/js/summernote",
@@ -769,14 +751,24 @@
 	],
 	"file_history":
 	[
+		"/D/work_nexi/nx_tools/app/view/attach/form.php",
+		"/D/work_nexi/nx_tools/app/member/memberModel.php",
+		"/D/work_nexi/nx_tools/app/member/memberControl.php",
+		"/D/work_nexi/nx_tools/member/index.php",
 		"/D/work_nexi/nx_tools/app/core/coreControl.php",
-		"/D/work_nexi/nx_tools/app/core/class.php",
+		"/D/work_nexi/nx_tools/app/core/coreModel.php",
+		"/D/work_nexi/nx_tools/app/view/member/list.php",
+		"/D/work_nexi/nx_tools/app/view/member/view.php",
+		"/D/work_nexi/nx_tools/app/view/member/form.php",
+		"/D/work_nexi/nx_tools/app/auth/authSession.php",
+		"/D/work_nexi/nx_tools/app/view/board/form.php",
 		"/D/work_nexi/nx_tools/app/core/config.php",
+		"/D/work_nexi/nx_tools/app/board/boardView.php",
+		"/D/work_nexi/nx_tools/app/core/class.php",
 		"/D/work_nexi/nx_tools/index.php",
 		"/D/work_nexi/nx_tools/app/auth/authModel.php",
 		"/D/work_nexi/nx_tools/app/core/func.lib.php",
 		"/D/work_nexi/nx_tools/app/auth/authControl.php",
-		"/D/work_nexi/nx_tools/app/auth/authSession.php",
 		"/D/work_nexi/nx_tools/test/extend.php",
 		"/D/work_nexi/nx_tools/test/namespace.php",
 		"/D/work_nexi/nx_tools/test/namespace_run.php",
@@ -786,16 +778,13 @@
 		"/D/wiz_studio/gun/gun.sublime-project",
 		"/D/work_brighten/gscctv/gscctv.sublime-project",
 		"/D/work_brighten/gscctv/gscctv.sublime-workspace",
-		"/D/work_nexi/nx_tools/app/view/board/form.php",
 		"/D/work_brighten/gs_bis/sftp-config.json",
 		"/D/work_nexi/nx_tools/.gitignore",
-		"/D/work_nexi/nx_tools/app/core/coreModel.php",
 		"/D/work_nexi/nx_tools/app/comment/commentControl.php",
 		"/D/work_nexi/nx_tools/app/attach/attachModel.php",
 		"/D/work_nexi/nx_tools/app/attach/attachControl.php",
 		"/D/work_nexi/nx_tools/app/core/func.page.php",
 		"/D/work_nexi/nx_tools/app/core/coreView.php",
-		"/D/work_nexi/nx_tools/app/board/boardView.php",
 		"/D/work_nexi/nx_tools/app/board/boardModel.php",
 		"/D/work_nexi/nx_tools/app/view/board/list.php",
 		"/D/work_nexi/nx_tools/app/view/board/view.php",
@@ -808,7 +797,6 @@
 		"/D/work_nexi/nx_tools/test/json_decode.php",
 		"/D/work_nexi/nx_tools/app/attach/attachView.php",
 		"/D/work_nexi/nx_tools/app/view/comment/list_.php",
-		"/D/work_nexi/nx_tools/app/view/attach/form.php",
 		"/D/work_nexi/nx_tools/app/view/master.html",
 		"/D/work_nexi/nx_tools/js/summernote/summernote.config.js",
 		"/D/work_nexi/nx_tools/app/js/custom.js",
@@ -817,7 +805,6 @@
 		"/D/work_nexi/nx_tools/app/create_table.sql",
 		"/D/wiz_studio/lily/sftp-config.json",
 		"/D/work_nexi/nx_tools/sftp-config.json",
-		"/D/work_nexi/nx_tools/app/view/member/view.php",
 		"/D/work_nexi/nx_tools/app/view/attach/view.php",
 		"/D/work_nexi/nx_tools/test/caller.php",
 		"/D/work_nexi/nx_tools/test/callee.php",
@@ -891,12 +878,7 @@
 		"/D/work_brighten/cooola/app/view/member/memberForm.php",
 		"/D/work_brighten/cooola/app/view/member/view.php",
 		"/D/work_brighten/cooola/app/view/member/memberView.php",
-		"/D/work_brighten/cooola/app/view/member/form.php",
-		"/D/work_brighten/cooola/app/view/member/loginForm.php",
-		"/D/work_brighten/cooola/app/css/custom.css",
-		"/D/work_brighten/cooola/member/init.php",
-		"/D/work_brighten/cooola/member/profile.php",
-		"/D/work_brighten/cooola/movie/list.php"
+		"/D/work_brighten/cooola/app/view/member/form.php"
 	],
 	"find":
 	{
@@ -1027,6 +1009,10 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"urlQuery",
+			">_auth",
+			">_attach",
+			"_attach",
 			"hasAuth",
 			"selectAuth",
 			"\\n",
@@ -1150,11 +1136,7 @@
 			"imageOprion",
 			",",
 			"getComment",
-			"remove",
-			"reply",
-			"_level",
-			"_SESSION",
-			"imageOprion"
+			"remove"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1300,24 +1282,59 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 5,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "member/index.php",
+					"file": "app/core/coreControl.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1551,
+						"buffer_size": 919,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								223,
-								223
+								304,
+								304
+							]
+						],
+						"settings":
+						{
+							"auto_complete": false,
+							"incomplete_sync": null,
+							"origin_encoding": "ASCII",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "app/core/coreModel.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 700,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1334,38 +1351,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "app/core/config.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1065,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/PHP/PHP.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 10,
+					"stack_index": 8,
 					"type": "text"
 				},
 				{
@@ -1381,8 +1367,43 @@
 						"selection":
 						[
 							[
-								1061,
-								1061
+								968,
+								968
+							]
+						],
+						"settings":
+						{
+							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
+							"remote_loading": false,
+							"synced": false,
+							"syntax": "Packages/PHP/PHP.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 660.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "app/attach/attachControl.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2988,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								988,
+								988
 							]
 						],
 						"settings":
@@ -1395,124 +1416,21 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 620.0,
+						"translation.y": 600.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
+					"file": "app/attach/attachView.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4178,
+						"buffer_size": 1169,
 						"regions":
 						{
-							"match":
-							{
-								"flags": 112,
-								"regions":
-								[
-									[
-										212,
-										219
-									],
-									[
-										350,
-										357
-									],
-									[
-										553,
-										560
-									],
-									[
-										620,
-										627
-									],
-									[
-										688,
-										695
-									],
-									[
-										760,
-										767
-									],
-									[
-										833,
-										840
-									],
-									[
-										904,
-										911
-									],
-									[
-										1342,
-										1349
-									],
-									[
-										1620,
-										1627
-									],
-									[
-										1820,
-										1827
-									],
-									[
-										1894,
-										1901
-									],
-									[
-										2101,
-										2108
-									],
-									[
-										2267,
-										2274
-									],
-									[
-										2400,
-										2407
-									],
-									[
-										2565,
-										2572
-									],
-									[
-										2757,
-										2764
-									],
-									[
-										2922,
-										2929
-									],
-									[
-										3082,
-										3089
-									],
-									[
-										3215,
-										3222
-									],
-									[
-										3380,
-										3387
-									],
-									[
-										3572,
-										3579
-									],
-									[
-										3737,
-										3744
-									],
-									[
-										3914,
-										3921
-									]
-								],
-								"scope": ""
-							}
 						},
 						"selection":
 						[
@@ -1523,45 +1441,6 @@
 						],
 						"settings":
 						{
-							"default_dir": "D:\\work_nexi\\nx_tools",
-							"detect_indentation": false,
-							"incomplete_sync": null,
-							"line_numbers": false,
-							"output_tag": 1,
-							"result_base_dir": "",
-							"result_file_regex": "^([^ \t].*):$",
-							"result_line_regex": "^ +([0-9]+):",
-							"scroll_past_end": true,
-							"syntax": "Packages/Default/Find Results.hidden-tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 2220.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 4,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "app/view/board/form.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5474,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3897,
-								3897
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
 							"incomplete_sync": null,
 							"remote_loading": false,
 							"synced": false,
@@ -1570,7 +1449,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1520.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
@@ -1578,24 +1457,26 @@
 				},
 				{
 					"buffer": 5,
-					"file": "app/board/boardView.php",
+					"file": "app/view/attach/view.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1551,
+						"buffer_size": 960,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								480,
+								480
 							]
 						],
 						"settings":
 						{
+							"auto_complete": false,
 							"incomplete_sync": null,
+							"origin_encoding": "ASCII",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/PHP/PHP.sublime-syntax",
@@ -1603,10 +1484,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 380.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 3,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -1629,6 +1510,7 @@
 						"settings":
 						{
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
 							"origin_encoding": "ASCII",
 							"remote_loading": false,
 							"synced": false,
@@ -1637,106 +1519,41 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 120.0,
+						"translation.y": 160.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 6,
+					"stack_index": 9,
 					"type": "text"
 				}
 			]
 		},
 		{
-			"selected": 2,
+			"selected": 1,
 			"sheets":
 			[
 				{
 					"buffer": 7,
-					"file": "app/member/memberControl.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 12722,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								8213,
-								8223
-							]
-						],
-						"settings":
-						{
-							"incomplete_sync": null,
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 60.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "app/auth/authSession.php",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 808,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								398,
-								398
-							]
-						],
-						"settings":
-						{
-							"auto_complete": false,
-							"incomplete_sync": null,
-							"origin_encoding": "ASCII",
-							"remote_loading": false,
-							"synced": false,
-							"syntax": "Packages/PHP/PHP.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 9,
 					"file": "app/board/boardControl.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8380,
+						"buffer_size": 8009,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								2330,
+								2330
 							]
 						],
 						"settings":
 						{
+							"auto_complete": false,
 							"incomplete_sync": null,
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/PHP/PHP.sublime-syntax",
@@ -1744,27 +1561,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1750.0,
+						"translation.y": 1660.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "app/member/memberModel.php",
+					"buffer": 8,
+					"file": "app/view/board/form.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 16576,
+						"buffer_size": 5544,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								311,
-								311
+								3860,
+								3860
 							]
 						],
 						"settings":
@@ -1778,34 +1595,32 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 20.0,
+						"translation.y": 1370.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 8,
+					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "app/core/coreModel.php",
+					"buffer": 9,
+					"file": "app/board/boardModel.php",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1045,
+						"buffer_size": 9107,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								559,
-								559
+								536,
+								536
 							]
 						],
 						"settings":
 						{
-							"auto_complete": false,
 							"incomplete_sync": null,
-							"origin_encoding": "ASCII",
 							"remote_loading": false,
 							"synced": false,
 							"syntax": "Packages/PHP/PHP.sublime-syntax",
@@ -1816,7 +1631,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 9,
+					"stack_index": 7,
 					"type": "text"
 				}
 			]
@@ -1906,7 +1721,7 @@
 		],
 		"width": 608.0
 	},
-	"selected_group": 1,
+	"selected_group": 0,
 	"settings":
 	{
 	},

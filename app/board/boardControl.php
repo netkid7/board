@@ -29,7 +29,9 @@ class BoardControl extends CoreControl
 
     public function index()
     {
-        checkAuth($this->_authMap['auth_list']);
+        if (!$this->_authMap['auth_list']) {
+            noAuthMsg();
+        }
 
         $query = $this->urlQuery();
 
@@ -49,7 +51,9 @@ class BoardControl extends CoreControl
 
     public function view($code)
     {
-        checkAuth($this->_authMap['auth_view']);
+        if (!$this->_authMap['auth_view']) {
+            noAuthMsg();
+        }
 
         if (empty($code)) {
             popupMsg('요청이 잘못되었습니다.');
@@ -84,7 +88,10 @@ class BoardControl extends CoreControl
 
     public function write()
     {
-        checkAuth($this->_authMap['auth_write']);
+        if (!$this->_authMap['auth_write']) {
+            noAuthMsg();
+        }
+
 
         if (empty($_POST)) {
             $data = array_merge(array('hdnAction'=>'add', 'hdnParent'=>'', 'hdnIdx'=>''), 
@@ -116,7 +123,9 @@ class BoardControl extends CoreControl
 
             $idx = $this->_model->insert();
 
-            $this->_attach->write($this->_table, $idx);
+            if ($this->_authMap['auth_attach']) {
+                $this->_attach->write($this->_table, $idx);
+            }
 
             $url = 'index.php'.$url;
             header("Location: $url");
@@ -125,7 +134,10 @@ class BoardControl extends CoreControl
 
     public function reply($code = '')
     {
-        checkAuth($this->_authMap['auth_modify']);
+        if (!$this->_authMap['auth_reply']) {
+            noAuthMsg();
+        }
+
 
         if (empty($_POST)) {
             $parent = $this->getBoard($code);
@@ -168,7 +180,9 @@ class BoardControl extends CoreControl
 
             $idx = $this->_model->insert();
 
-            $this->_attach->write($this->_table, $idx);
+            if ($this->_authMap['auth_attach']) {
+                $this->_attach->write($this->_table, $idx);
+            }
 
             $url = 'index.php'.$url;
             header("Location: $url");
@@ -177,7 +191,9 @@ class BoardControl extends CoreControl
 
     public function modify($code = '')
     {
-        checkAuth($this->_authMap['auth_modify']);
+        if (!$this->_authMap['auth_modify']) {
+            noAuthMsg();
+        }
 
         if (empty($_POST)) {
             // 접근 권한 확인후 적용
@@ -193,7 +209,9 @@ class BoardControl extends CoreControl
             $data['b_parent'] = '';
             $data['b_content'] = htmlspecialchars_decode($data['b_content']);
 
-            $data['b_attach'] = $this->_attach->modify($this->_table, $code, $this->_authMap['auth_attach_count']);
+            if ($this->_authMap['auth_attach']) {
+                $data['b_attach'] = $this->_attach->modify($this->_table, $code, $this->_authMap['auth_attach_count']);
+            }
 
             $data['auth'] = $this->_authMap;
 
@@ -227,7 +245,9 @@ class BoardControl extends CoreControl
 
             $this->_model->update();
 
-            $this->_attach->modify($this->_table, $_POST['idx'], $this->_authMap['auth_attach_count']);
+            if ($this->_authMap['auth_attach']) {
+                $this->_attach->modify($this->_table, $_POST['idx'], $this->_authMap['auth_attach_count']);
+            }
 
             $url = 'index.php'.$url;
             header("Location: $url");
@@ -236,7 +256,9 @@ class BoardControl extends CoreControl
 
     public function remove()
     {
-        checkAuth($this->_authMap['auth_remove']);
+        if (!$this->_authMap['auth_remove']) {
+            noAuthMsg();
+        }
 
         if (empty($_POST)) {
             popupMsg('요청이 잘못되었습니다.');
@@ -256,7 +278,9 @@ class BoardControl extends CoreControl
 
             $this->_model->delete();
 
-            $this->_attach->removeAll($this->_table, $_POST['idx']);
+            if ($this->_authMap['auth_attach']) {
+                $this->_attach->removeAll($this->_table, $_POST['idx']);
+            }
 
             $url = 'index.php'.$url;
             header("Location: $url");
