@@ -213,7 +213,9 @@ class MemberControl extends CoreControl
 
     public function index()
     {
-        checkAuth($this->_authMap['auth_list']);
+        if (!$this->_authMap['auth_list']) {
+            noAuthMsg();
+        }
 
         $query = $this->urlQuery();
 
@@ -234,7 +236,9 @@ class MemberControl extends CoreControl
 
     public function view($code)
     {
-        checkAuth($this->_authMap['auth_view']);
+        if (!$this->_authMap['auth_view']) {
+            noAuthMsg();
+        }
 
         if (empty($code)) {
             popupMsg('요청이 잘못되었습니다.');
@@ -278,7 +282,9 @@ class MemberControl extends CoreControl
 
     public function write()
     {
-        checkAuth($this->_authMap['auth_write']);
+        if (!$this->_authMap['auth_write']) {
+            noAuthMsg();
+        }
 
         if (empty($_POST)) {
             $data = array_merge(array('hdnAction'=>'add', 'hdnIdx'=>'', 'hdnDupl'=>'0'), 
@@ -319,7 +325,9 @@ class MemberControl extends CoreControl
 
     public function modify($code)
     {
-        checkAuth($this->_authMap['auth_modify']);
+        if (!$this->_authMap['auth_modify']) {
+            noAuthMsg();
+        }
 
         if (empty($_POST)) {
             $data = array_merge(array('hdnAction'=>'mod', 'hdnIdx'=>$code, 'hdnDupl'=>'1'), 
@@ -329,6 +337,8 @@ class MemberControl extends CoreControl
 
             $this->_view->modify($data);
         } else {
+            // 필수 항목 체크
+            
             $url = (empty($_POST['url']))? '?': '?'.$_POST['url'].'&';
 
             // model에서 쿼리문 구성을 위해 unset()
@@ -351,13 +361,18 @@ class MemberControl extends CoreControl
 
     public function remove()
     {
-        checkAuth($this->_authMap['auth_remove']);
+        if (!$this->_authMap['auth_remove']) {
+            noAuthMsg();
+        }
         
         if (empty($_POST)) {
             popupMsg('요청이 잘못되었습니다.');
             exit;
         } else {
             // 접근 권한 확인후 적용
+            if (!$this->_auth->isAdmin()) {
+                noAuthMsg();
+            }
 
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
 

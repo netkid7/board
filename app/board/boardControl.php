@@ -108,6 +108,8 @@ class BoardControl extends CoreControl
 
             $this->_view->write($data);
         } else {
+            // 필수 항목 체크
+            
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
 
             // model에서 쿼리문 구성을 위해 unset()
@@ -157,6 +159,8 @@ class BoardControl extends CoreControl
 
             $this->_view->write($data);
         } else {
+            // 필수 항목 체크
+
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
             $step = $_POST['step'];
 
@@ -217,6 +221,8 @@ class BoardControl extends CoreControl
 
             $this->_view->modify($data);
         } else {
+            // 필수 항목 체크
+
             // 접근 권한 확인후 적용
             if (!$this->_auth->isAdmin()) {
                 if ($this->_model->isParent($_POST['idx'])) {
@@ -224,7 +230,10 @@ class BoardControl extends CoreControl
                     exit;
                 }
                 
-                // 패스워드확인 by $_SESSION 로그인 정보
+                if (!$this->checkPassword()) {
+                    popupMsg('비밀번호가 일치하지 않습니다.');
+                    exit;
+                }
             }
 
 
@@ -254,6 +263,14 @@ class BoardControl extends CoreControl
         }
     }
 
+    private function checkPassword()
+    {
+        $data = $this->getBoard($_POST['idx']);
+        $password = (empty($_POST['password']))? $_SESSION["_id"]: $_POST['password'];
+
+        return ($password == $data['b_password']);
+    }
+
     public function remove()
     {
         if (!$this->_authMap['auth_remove']) {
@@ -264,6 +281,8 @@ class BoardControl extends CoreControl
             popupMsg('요청이 잘못되었습니다.');
             exit;
         } else {
+            // 필수 항목 체크
+
             // 접근 권한 확인후 적용
             if (!$this->_auth->isAdmin()) {
                 if ($this->_model->isParent($_POST['idx'])) {
@@ -271,7 +290,10 @@ class BoardControl extends CoreControl
                     exit;
                 }
 
-                // 패스워드확인 by $_SESSION 로그인 정보
+                if (!$this->checkPassword()) {
+                    popupMsg('비밀번호가 일치하지 않습니다.');
+                    exit;
+                }
             }
             
             $url = (empty($_POST['url']))? '': '?'.$_POST['url'];
