@@ -72,7 +72,7 @@ if (empty($get_s)) {
                                         $title = '[공지] '.$title;
                                     }
 
-                                    if (hasAuth($auth['auth_view'])) {
+                                    if ($auth['auth_view']) {
                                         $title = $indent .'<a href="'. $_SERVER['PHP_SELF'] .'?enter=v&idx='. $idx .'&'. getQuery() .'">'.$title .'</a>';
                                     }
 

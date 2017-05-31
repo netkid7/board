@@ -45,22 +45,26 @@ class AuthControl extends CoreControl
     {
         $data = $this->_model->selectAuth($tableName);
 
-        $result = array(
-            'auth_list' => $this->hasAuth($data['a_list']),
-            'auth_view' => $this->hasAuth($data['a_view']),
-            'auth_write' => $this->hasAuth($data['a_write']),
-            'auth_download' => $this->hasAuth($data['a_download']),
-            'auth_modify' => $this->hasAuth($data['a_modify']),
-            'auth_remove' => $this->hasAuth($data['a_remove']),
-            'auth_reply' => $this->hasAble($data['f_reply'], $data['a_reply']),
-            'auth_comment' => $this->hasAble($data['f_comment'], $data['a_comment']),
-            'auth_comment_reply' => $this->hasAble($data['f_comment_reply'], $data['a_comment_reply']),
-            'auth_notice' => $this->hasAble($data['f_notice'], $data['a_notice']),
-            'auth_secret' => $this->hasAble($data['f_secret'], $data['a_secret']),
-            'auth_attach' => ($this->hasAuth($data['a_attach']) && ($data['f_attach_count'] > 0)),
-            'auth_attach_count' => $data['f_attach_count'],
-            'auth_attach_type' => $data['f_attach_type']
-            );
+        if ($data) {
+            $result = array(
+                'auth_list' => $this->hasAuth($data['a_list']),
+                'auth_view' => $this->hasAuth($data['a_view']),
+                'auth_write' => $this->hasAuth($data['a_write']),
+                'auth_download' => $this->hasAuth($data['a_download']),
+                'auth_modify' => $this->hasAuth($data['a_modify']),
+                'auth_remove' => $this->hasAuth($data['a_remove']),
+                'auth_reply' => $this->hasAble($data['f_reply'], $data['a_reply']),
+                'auth_comment' => $this->hasAble($data['f_comment'], $data['a_comment']),
+                'auth_comment_reply' => $this->hasAble($data['f_comment_reply'], $data['a_comment_reply']),
+                'auth_notice' => $this->hasAble($data['f_notice'], $data['a_notice']),
+                'auth_secret' => $this->hasAble($data['f_secret'], $data['a_secret']),
+                'auth_attach' => ($this->hasAuth($data['a_attach']) && ($data['f_attach_count'] > 0)),
+                'auth_attach_count' => $data['f_attach_count'],
+                'auth_attach_type' => $data['f_attach_type']
+                );
+        } else {
+            $result = false;
+        }
 
         return $result;
     }

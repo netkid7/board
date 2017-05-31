@@ -75,9 +75,9 @@ function noAuthMsg($msg = '')
 }
 
 
-function getAuthButton($level, $strButton)
+function getAuthButton($isAuth, $strButton)
 {
-    return (hasAuth($level))? $strButton: '';
+    return ($isAuth)? $strButton: '';
 }
 
 
