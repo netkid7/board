@@ -16,6 +16,9 @@ class AuthControl extends CoreControl
         $this->_table = $this->_model->getTable();
         
         $this->_authMap = $this->getAuthBy($this->_table);
+        if ($this->_authMap == FALSE) {
+            exit('No authorized table: Auth.');
+        }
     }
 
     /*

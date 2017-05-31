@@ -31,6 +31,9 @@ class MemberControl extends CoreControl
 
         $this->_auth = loadClass('AuthControl', 'auth');
         $this->_authMap = $this->_auth->getAuthBy($this->_table);
+        if ($this->_authMap == FALSE) {
+            exit('No authorized table: Member.');
+        }
 
         $this->_attach = loadClass('AttachControl', 'attach');
         $this->_attach->setUploadExtension();
